@@ -12,12 +12,17 @@ namespace SubMapper
         where TSubA : new()
         where TSubB : new()
     {
+        public SubMapping()
+        {
+            Extensibility.DerivedMapping = this;
+        }
+
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, TSubB>> getSubBExpr) 
         {
             var result = _subMaps.Select(s => s.MapVia(getSubAExpr, getSubBExpr)).ToList();
             return result;
-        }
+        }        
     }
 }

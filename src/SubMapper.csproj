@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseMapping\BaseMapping.cs" />
     <Compile Include="BaseMapping\Documentation.cs" />
+    <Compile Include="BaseMapping\Extensibility.cs" />
     <Compile Include="BaseMapping\Map.cs" />
     <Compile Include="BaseMapping\Get.cs" />
     <Compile Include="BaseMapping\SubMap.cs" />
@@ -55,7 +57,7 @@
     <Compile Include="SubMapping\Get.cs" />
     <Compile Include="SubMapping\SubMap.cs" />
     <Compile Include="SubMapping\SubMapping.cs" />
-    <Compile Include="SubMapping\BaseMapping.cs" />
+    <Compile Include="SubMapping\BaseMappingExtensions.cs" />
     <Compile Include="SubMapping\Handle.cs" />
     <Compile Include="SubMapping\Inheritance.cs" />
     <Compile Include="TargetType.cs" />
