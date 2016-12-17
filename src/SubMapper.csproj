@@ -48,18 +48,16 @@
     <Compile Include="BaseMapping\Documentation.cs" />
     <Compile Include="BaseMapping\Extensibility.cs" />
     <Compile Include="BaseMapping\Map.cs" />
-    <Compile Include="BaseMapping\Get.cs" />
     <Compile Include="BaseMapping\SubMap.cs" />
     <Compile Include="BaseMapping\Translate.cs" />
+    <Compile Include="Mapping.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceType.cs" />
-    <Compile Include="SubMapping\Get.cs" />
     <Compile Include="SubMapping\SubMap.cs" />
     <Compile Include="SubMapping\SubMapping.cs" />
     <Compile Include="SubMapping\BaseMappingExtensions.cs" />
     <Compile Include="SubMapping\Handle.cs" />
-    <Compile Include="SubMapping\Inheritance.cs" />
     <Compile Include="TargetType.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

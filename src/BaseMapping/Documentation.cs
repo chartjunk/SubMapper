@@ -8,6 +8,7 @@ namespace SubMapper
 {
     public partial class BaseMapping<TA, TB>
     {
+        // TODO:
         public string GetDocumentation()
             => string.Join(Environment.NewLine, _subMaps.Select(s => s.SubAPropertyName + " MAPS TO " + s.SubBPropertyName));
     }

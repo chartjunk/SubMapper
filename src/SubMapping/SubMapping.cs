@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SubMapper
+namespace SubMapper.SubMapping
 {
     public partial class SubMapping<TA, TB, TSubA, TSubB>
         : BaseMapping<TSubA, TSubB>

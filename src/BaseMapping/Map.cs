@@ -8,8 +8,7 @@ namespace SubMapper
         public BaseMapping<TA, TB> Map<TValue>(
             Expression<Func<TA, TValue>> getSubAExpr,
             Expression<Func<TB, TValue>> getSubBExpr)
-        {
-            // TODO: korjaa 
+        { 
             var subAInfo = Utils.GetMapPropertyInfo(getSubAExpr);
             var subBInfo = Utils.GetMapPropertyInfo(getSubBExpr);
 

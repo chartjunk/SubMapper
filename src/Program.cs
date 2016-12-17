@@ -27,11 +27,12 @@ namespace SubMapper
             var testTarget = new TargetType();
             var testSource2 = new SourceType();
 
-            var mapping = GetMapping.FromTo<SourceType, TargetType>()
+            var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .Map(a => a.SourceString, b => b.TargetString)
-                .WithSubMapping(a => a.SourceSub, b => b, h => GetMapping.SubFromHandle(h).Do()
-                    .WithSubMapping(a => a.SourceSubSub, b => b, h2 => GetMapping.SubFromHandle(h2).Do()
-                        .Map(a => a.SourceString2, b => b.TargetString2)));
+                .WithSubMapping(a => a.SourceSub, b => b, h => Mapping.Using(h).Do()
+                    .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2).Do()
+                        .Map(a => a.SourceString2, b => b.TargetString2)
+                        .Map(a => a.SourceInt2, b => b.TargetInt2)));
 
             //var mapping2 = GetMapping.FromTo<SourceType, TargetType>()
             //    .Map(s => s.SourceString, t => t.TargetString)
