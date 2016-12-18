@@ -22,44 +22,102 @@ namespace SubMapper.EnumerableMapping
             Expression<Func<TB, TSubB>> getSubBExpr)
             => _subMaps.Select(s => MapVia(s, getSubAExpr, getSubBExpr)).ToList();
 
-        protected static SubMap MapVia<TNonA, TNonB>(
+        //protected static SubMap MapVia(
+        //    Func<object, object> getFinalAFromA,
+        //    Func<object, object> getFinalBFromB,
+        //    Action<Func<object>, Func<object, object>, object> setFinalAFromA,
+        //    Action<Func<object>, Func<object, object>, object> setFinalBFromB,
+        //    string finalAPropertyName,
+        //    string finalBPropertyName)
+        //{
+            
+        //}
+
+        protected SubMap MapVia<TNonA, TNonB>(
             SubMap prevSubMap,
             Expression<Func<TNonA, IEnumerable<TSubAItem>>> getSubAExpr,
             Expression<Func<TNonB, TSubB>> getSubBExpr)
         {
-            var aInfo = getSubAExpr.GetMapPropertyInfo();
-            var bInfo = getSubBExpr.GetMapPropertyInfo();
+            // SubMapping
+            //return MapVia(
+            //    a => prevSubMap.GetSubAFromA(a),
+            //    b => prevSubMap.GetSubBFromB(b),
+            //    (getA, setAndGetA, v) =>
+            //    {
+            //        var a = getA() ?? setAndGetA(new TSubA());
+            //        prevSubMap.SetSubAFromA(a, v);
+            //    },
+            //    (getB, setAndGetB, v) =>
+            //    {
+            //        var b = getB() ?? setAndGetB(new TSubB());
+            //        prevSubMap.SetSubBFromB(b, v);
+            //    },
+            //    prevSubMap.SubAPropertyName,
+            //    prevSubMap.SubBPropertyName);
+
+            //// FromEnumerableMapping
+            //return MapVia(
+            //    // TODO: aggregate instead of first
+            //    a => _whereMatchess.First().GetFirstSubAItemFromSubAEnumWhereMatches(prevSubMap.GetSubAFromA(a)),
+            //    b => prevSubMap.GetSubBFromB(b),
+            //    (getA, setAndGetA, v) =>
+            //    {
+            //        var a = getA() ?? setAndGetA(new TSubAItem());
+            //        _getTSubAEnumWithAddedTSubAItem()
+            //    }
+            //    )
+
+
+            var subAEnumInfo = getSubAExpr.GetMapPropertyInfo();
+            var subBInfo = getSubBExpr.GetMapPropertyInfo();
 
             var result = new SubMap
             {
                 GetSubAFromA = na =>
                 {
-                    var a = aInfo.Getter(na);
-                    if (a == null) return null;
-                    return prevSubMap.GetSubAFromA(a);
+                    var subAEnum = subAEnumInfo.Getter(na);
+                    if (subAEnum == null) return null;
+                    // TODO: make WhereMatchesContainer consume objets instead of derived types
+                    var subAItem = _whereMatchess.First().GetFirstSubAItemFromSubAEnumWhereMatches((TSubAEnum)subAEnum);
+                    if (subAItem == null) return null;
+                    return prevSubMap.GetSubAFromA(subAItem);
                 },
                 GetSubBFromB = nb =>
                 {
-                    var b = bInfo.Getter(nb);
-                    if (b == null) return null;
-                    return prevSubMap.GetSubBFromB(b);
+                    var subB = subBInfo.Getter(nb);
+                    if (subB == null) return null;
+                    return prevSubMap.GetSubBFromB(subB);
                 },
 
                 // TODO
-                SubAPropertyName = aInfo.Setter == null ? prevSubMap.SubAPropertyName : (aInfo.PropertyName + "." + prevSubMap.SubAPropertyName),
-                SubBPropertyName = bInfo.Setter == null ? prevSubMap.SubBPropertyName : (bInfo.PropertyName + "." + prevSubMap.SubBPropertyName),
+                SubAPropertyName = "TODO", //subAEnumInfo.Setter == null ? prevSubMap.SubAPropertyName : (aInfo.PropertyName + "." + prevSubMap.SubAPropertyName),
+                SubBPropertyName = subBInfo.Setter == null ? prevSubMap.SubBPropertyName : (subBInfo.PropertyName + "." + prevSubMap.SubBPropertyName),
 
                 SetSubAFromA = (na, v) =>
                 {
                     if (v == null) return;
-                    if (aInfo.Getter(na) == null) aInfo.Setter(na, new TSubA());
-                    prevSubMap.SetSubAFromA(aInfo.Getter(na), v);
+                    var subAEnum = subAEnumInfo.Getter(na);
+
+                    // TODO: allow multiple
+                    var whereMatches = _whereMatchess.First();
+                    var subAItem = subAEnum != null ? (object)whereMatches.GetFirstSubAItemFromSubAEnumWhereMatches((TSubAEnum)subAEnum) : null;
+                    if (subAItem == null)
+                    {
+                        subAItem = new TSubAItem();
+                        typeof(TSubAItem).GetMapPropertyInfo(whereMatches.ValuePropertyName).Setter(subAItem, whereMatches.ValuePropertyValue);
+                        subAEnum = _getTSubAEnumWithAddedTSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
+                        subAEnumInfo.Setter(na, subAEnum);
+                    }
+                    else
+                    {
+                        prevSubMap.SetSubAFromA(subAEnum, v);
+                    }
                 },
                 SetSubBFromB = (nb, v) =>
                 {
                     if (v == null) return;
-                    if (bInfo.Getter(nb) == null) bInfo.Setter(nb, new TSubB());
-                    prevSubMap.SetSubBFromB(bInfo.Getter(nb), v);
+                    if (subBInfo.Getter(nb) == null) subBInfo.Setter(nb, new TSubB());
+                    prevSubMap.SetSubBFromB(subBInfo.Getter(nb), v);
                 }
             };
 

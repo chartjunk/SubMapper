@@ -18,6 +18,8 @@ namespace SubMapper.EnumerableMapping
         private class WhereMatchesContainer
         {
             public Func<TSubAEnum, TSubAItem> GetFirstSubAItemFromSubAEnumWhereMatches { get; internal set; }
+            public string ValuePropertyName { get; set; }
+            public object ValuePropertyValue { get; set; }
         }
 
         public FromEnumerableMapping<TA, TB, TSubAEnum, TSubB, TSubAItem> FirstWhereEquals<TValue>(
@@ -32,7 +34,9 @@ namespace SubMapper.EnumerableMapping
 
             _whereMatchess.Add(new WhereMatchesContainer
             {
-                GetFirstSubAItemFromSubAEnumWhereMatches = getFirstSubAItemFromSubAEnumWhereMatches
+                GetFirstSubAItemFromSubAEnumWhereMatches = getFirstSubAItemFromSubAEnumWhereMatches,
+                ValuePropertyName = subAItemValuePropertyInfo.PropertyName,
+                ValuePropertyValue = equalValue
             });
 
             return this;

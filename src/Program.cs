@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace SubMapper
 {
@@ -28,6 +29,7 @@ namespace SubMapper
                         .Map(a => a.SourceString2, b => b.TargetString2)
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
+                    .WithAdder((ac, a) => new [] { a }.Union(ac??new SourceSubType[] { }))
                     .FirstWhereEquals(a => a.NutrientKey, "NN").Do()
                     .Map(a => a.NutrientAmount, b => b.TargetInt));  
 

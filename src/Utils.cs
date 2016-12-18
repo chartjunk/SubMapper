@@ -19,26 +19,28 @@ namespace SubMapper
             else return null;
         }
 
-        public static MapPropertyInfo<TI, TValue> GetMapPropertyInfo<TI, TValue>(
+        public static MapPropertyInfo GetMapPropertyInfo<TI, TValue>(
             this Expression<Func<TI, TValue>> getIExpr)
-            => new MapPropertyInfo<TI, TValue>(getIExpr);
+            => new MapPropertyInfo(getIExpr.GetPropertyInfo());
 
-        public class MapPropertyInfo<TI, TValue>
+        public static MapPropertyInfo GetMapPropertyInfo(
+            this Type targetType, string propertyName)
+            => new MapPropertyInfo(targetType.GetProperty(propertyName));
+
+        public class MapPropertyInfo
         {
             public Func<object, object> Getter { get; private set; }
             public Action<object, object> Setter { get; private set; }
             public string PropertyName { get; private set; }
 
-            public MapPropertyInfo(Expression<Func<TI, TValue>> getIExpr)
+            public MapPropertyInfo(PropertyInfo propertyInfo)
             {
-                var iPropertyInfo = GetPropertyInfo(getIExpr);
-
                 // TODO: refactor this logic, separated in two places
-                if (iPropertyInfo != null)
+                if (propertyInfo != null)
                 {
-                    Getter = i => iPropertyInfo.GetValue(i);
-                    Setter = (i, v) => iPropertyInfo.SetValue(i, v);
-                    PropertyName = iPropertyInfo.Name;
+                    Getter = i => propertyInfo.GetValue(i);
+                    Setter = (i, v) => propertyInfo.SetValue(i, v);
+                    PropertyName = propertyInfo.Name;
                 }
                 else
                 {
