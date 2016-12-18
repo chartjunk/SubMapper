@@ -25,7 +25,7 @@ namespace SubMapper
 
         protected List<SubMap> _subMaps { get; set; } = new List<SubMap>();
 
-        private IToJSubMap GetAToBIToJFrom(SubMap subMap)
+        private static IToJSubMap GetAToBIToJFrom(SubMap subMap)
         {
             return new IToJSubMap
             {
@@ -34,7 +34,7 @@ namespace SubMapper
             };
         }
 
-        private IToJSubMap GetBToAIToJFrom(SubMap subMap)
+        private static IToJSubMap GetBToAIToJFrom(SubMap subMap)
         {
             return new IToJSubMap
             {

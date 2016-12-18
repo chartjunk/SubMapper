@@ -25,5 +25,6 @@ namespace SubMapper
         public string SourceString { get; set; }
         public DateTime? SourceDateTime { get; set; }
         public SourceSubType SourceSub { get; set; }
+        public IEnumerable<SourceSubType> SourceSubs { get; set; }
     }
 }

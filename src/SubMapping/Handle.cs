@@ -1,7 +1,4 @@
 ﻿namespace SubMapper.SubMapping
 {
-    public class SubMappingHandle<TA, TB, TSubA, TSubB>
-    {
-
-    }
+    public class SubMappingHandle<TA, TB, TSubA, TSubB> { }
 }

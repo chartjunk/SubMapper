@@ -4,7 +4,7 @@ using SubMapper.SubMapping;
 
 namespace SubMapper
 {
-    public static class BaseMappingExtensions
+    public static partial class BaseMappingExtensions
     {
         public static BaseMapping<TA, TB> WithSubMapping<TA, TB, TSubA, TSubB>(
             this BaseMapping<TA, TB> source,

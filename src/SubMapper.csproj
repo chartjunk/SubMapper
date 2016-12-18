@@ -50,6 +50,10 @@
     <Compile Include="BaseMapping\Map.cs" />
     <Compile Include="BaseMapping\SubMap.cs" />
     <Compile Include="BaseMapping\Translate.cs" />
+    <Compile Include="EnumerableMapping\BaseMappingExtensions.cs" />
+    <Compile Include="EnumerableMapping\FromEnumerableMapping.cs" />
+    <Compile Include="EnumerableMapping\Handle.cs" />
+    <Compile Include="EnumerableMapping\WhereEquals.cs" />
     <Compile Include="Mapping.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

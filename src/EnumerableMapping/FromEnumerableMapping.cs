@@ -3,26 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace SubMapper.SubMapping
+namespace SubMapper.EnumerableMapping
 {
-    public partial class SubMapping<TA, TB, TSubA, TSubB>
-        : BaseMapping<TSubA, TSubB>
-        where TSubA : new()
+    public partial class FromEnumerableMapping<TA, TB, TSubAEnum, TSubB, TSubAItem>
+        : BaseMapping<TSubAItem, TSubB>
         where TSubB : new()
+        where TSubAItem : new()
+        where TSubAEnum : IEnumerable<TSubAItem>
     {
-        public SubMapping()
-        {
-            Extensibility.DerivedMapping = this;
-        }
-
         public List<SubMap> GetSubMapsWithAddedPath(
-            Expression<Func<TA, TSubA>> getSubAExpr,
-            Expression<Func<TB, TSubB>> getSubBExpr) 
-            =>  _subMaps.Select(s => MapVia(s, getSubAExpr, getSubBExpr)).ToList();
+            Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAExpr,
+            Expression<Func<TB, TSubB>> getSubBExpr)
+            => _subMaps.Select(s => MapVia(s, getSubAExpr, getSubBExpr)).ToList();
 
         protected static SubMap MapVia<TNonA, TNonB>(
             SubMap prevSubMap,
-            Expression<Func<TNonA, TSubA>> getSubAExpr,
+            Expression<Func<TNonA, IEnumerable<TSubAItem>>> getSubAExpr,
             Expression<Func<TNonB, TSubB>> getSubBExpr)
         {
             var aInfo = getSubAExpr.GetMapPropertyInfo();
