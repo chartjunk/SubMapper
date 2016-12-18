@@ -11,19 +11,13 @@ namespace SubMapper.EnumerableMapping
             : BaseMapping<TSubAItem, TSubB>
             where TSubB : new()
             where TSubAItem : new()
-            where TSubAEnum : IEnumerable<TSubAItem>, new()
+            where TSubAEnum : IEnumerable<TSubAItem>
     {
         private List<WhereMatchesContainer> _whereMatchess;
 
         private class WhereMatchesContainer
         {
             public Func<TSubAEnum, TSubAItem> GetFirstSubAItemFromSubAEnumWhereMatches { get; internal set; }
-        }
-
-        public FromEnumerableMapping()
-        {
-            Extensibility.DerivedMapping = this;
-            _whereMatchess = new List<WhereMatchesContainer>();
         }
 
         public FromEnumerableMapping<TA, TB, TSubAEnum, TSubB, TSubAItem> FirstWhereEquals<TValue>(

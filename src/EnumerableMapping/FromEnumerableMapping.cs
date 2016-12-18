@@ -11,6 +11,12 @@ namespace SubMapper.EnumerableMapping
         where TSubAItem : new()
         where TSubAEnum : IEnumerable<TSubAItem>
     {
+        public FromEnumerableMapping()
+        {
+            Extensibility.DerivedMapping = this;
+            _whereMatchess = new List<WhereMatchesContainer>();
+        }
+
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAExpr,
             Expression<Func<TB, TSubB>> getSubBExpr)
