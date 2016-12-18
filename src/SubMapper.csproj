@@ -54,6 +54,8 @@
     <Compile Include="EnumerableMapping\BaseMappingExtensions.cs" />
     <Compile Include="EnumerableMapping\FromEnumerableMapping.cs" />
     <Compile Include="EnumerableMapping\Handle.cs" />
+    <Compile Include="EnumerableMapping\PartialEnumerableMapping.cs" />
+    <Compile Include="EnumerableMapping\ToEnumerableMapping.cs" />
     <Compile Include="EnumerableMapping\WhereEquals.cs" />
     <Compile Include="Mapping.cs" />
     <Compile Include="Program.cs" />

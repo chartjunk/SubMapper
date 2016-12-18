@@ -20,9 +20,16 @@ namespace SubMapper
 
         public static FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem> 
             Using<TA, TB, TSubB, TSubAItem>(
-            FromEnumerableMappingHandle<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem> enumerableMappingHandle)
+            FromEnumerableMappingHandle<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem> fromEnumerableMappingHandle)
             where TSubAItem : new()
             where TSubB : new()
             => new FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>();
+
+        public static ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>
+            Using<TA, TB, TSubA, TSubBItem>(
+            ToEnumerableMappingHandle<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem> toEnumerableMappingHandle)
+            where TSubA : new()
+            where TSubBItem : new()
+            => new ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>();
     }
 }

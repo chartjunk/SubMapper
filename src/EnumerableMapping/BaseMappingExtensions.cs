@@ -22,5 +22,20 @@ namespace SubMapper
             source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
         }
+
+        public static BaseMapping<TA, TB> WithToEnumerableMapping<TA, TB, TSubA, TSubBItem>(
+            this BaseMapping<TA, TB> source,
+            Expression<Func<TA, TSubA>> getSubAExpr,
+            Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr,
+            Func<ToEnumerableMappingHandle<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>, BaseMapping<TSubA, TSubBItem>> getInnerBaseMapping)
+            where TSubA : new()
+            where TSubBItem : new()
+        {
+            var innerBaseMapping = getInnerBaseMapping(new ToEnumerableMappingHandle<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>());
+            var fromEnumerableMapping = innerBaseMapping.Extensibility.DerivedMapping as ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>;
+            var fullSubMaps = fromEnumerableMapping.GetSubMapsWithAddedPath(getSubAExpr, getSubBEnumExpr);
+            source.Extensibility.SubMaps.AddRange(fullSubMaps);
+            return source;
+        }
     }
 }

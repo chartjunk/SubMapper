@@ -13,19 +13,43 @@ namespace SubMapper
 
         public string SubAPropertyName { get; set; }
         public string SubBPropertyName { get; set; }
+
+        public static SubMap Rotate(SubMap subMap)
+        {
+            return new SubMap
+            {
+                GetSubAFromA = subMap.GetSubBFromB,
+                GetSubBFromB = subMap.GetSubAFromA,
+
+                SetSubAFromA = subMap.SetSubBFromB,
+                SetSubBFromB = subMap.SetSubAFromA,
+
+                SubAPropertyName = subMap.SubBPropertyName,
+                SubBPropertyName = subMap.SubAPropertyName
+            };
+        }
     }
 
     public partial class BaseMapping<TA, TB>
     {
-        private class IToJSubMap
+        protected class IToJSubMap
         {
             public Func<object, object> GetSubIFromI { get; set; }
             public Action<object, object> SetSubJFromJ { get; set; }
+
+            public static SubMap ToPartialAToBSubMap(IToJSubMap iToJSubMap)
+            {
+                return new SubMap
+                {
+                    GetSubAFromA = iToJSubMap.GetSubIFromI,
+                    SetSubBFromB = iToJSubMap.SetSubJFromJ
+                };
+            }
         }
 
         protected List<SubMap> _subMaps { get; set; } = new List<SubMap>();
 
-        private static IToJSubMap GetAToBIToJFrom(SubMap subMap)
+        protected static IToJSubMap GetAToBIToJFrom(SubMap subMap)
         {
             return new IToJSubMap
             {
@@ -34,7 +58,7 @@ namespace SubMapper
             };
         }
 
-        private static IToJSubMap GetBToAIToJFrom(SubMap subMap)
+        protected static IToJSubMap GetBToAIToJFrom(SubMap subMap)
         {
             return new IToJSubMap
             {

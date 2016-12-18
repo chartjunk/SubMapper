@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace SubMapper.EnumerableMapping
 {
-    public partial class FromEnumerableMapping<TA, TB, TSubAEnum, TSubB, TSubAItem>
-        : BaseMapping<TSubAItem, TSubB>
-        where TSubB : new()
-        where TSubAItem : new()
-        where TSubAEnum : IEnumerable<TSubAItem>
+    public abstract partial class PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem>
+        : BaseMapping<TSubA, TSubB>
+        where TSubIEnum : IEnumerable<TSubIItem>
+        where TSubJ : new()
+        where TSubIItem : new()
     {
-        private Func<TSubAEnum, TSubAItem, TSubAEnum> _getTSubAEnumWithAddedTSubAItem;
+        private Func<TSubIEnum, TSubIItem, TSubIEnum> _getTSubAEnumWithAddedTSubAItem;
 
-        public FromEnumerableMapping<TA, TB, TSubAEnum, TSubB, TSubAItem> WithAdder(Func<TSubAEnum, TSubAItem, TSubAEnum> getEnumerableWithAddedItem)
+        public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> WithAdder(Func<TSubIEnum, TSubIItem, TSubIEnum> getEnumerableWithAddedItem)
         {
             _getTSubAEnumWithAddedTSubAItem = getEnumerableWithAddedItem;
             return this;
