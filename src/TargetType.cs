@@ -20,5 +20,6 @@ namespace SubMapper
         public string TargetString2 { get; set; }
         public int TargetInt2 { get; set; }
         public TargetSubType[] TargetSubs { get; set; }
+        public string TargetString3 { get; set; }
     }
 }
