@@ -13,7 +13,7 @@ namespace SubMapper.EnumerableMapping
         where TSubJ : new()
         where TSubIItem : new()
     {
-        protected SubMap MapVia<TNonI, TNonJ>(
+        protected SubMap MapFromEnumerableVia<TNonI, TNonJ>(
             SubMap prevSubMap,
             Expression<Func<TNonI, IEnumerable<TSubIItem>>> getSubIExpr,
             Expression<Func<TNonJ, TSubJ>> getSubJExpr)

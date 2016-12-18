@@ -16,9 +16,9 @@ namespace SubMapper.EnumerableMapping
             Extensibility.DerivedMapping = this;
         }
 
-        public virtual List<SubMap> GetSubMapsWithAddedPath(
+        public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr)
-            => _subMaps.Select(SubMap.Rotate).Select(s => MapVia(s, getSubBEnumExpr, getSubAExpr)).Select(SubMap.Rotate).ToList();
+            => _subMaps.Select(SubMap.Rotate).Select(s => MapFromEnumerableVia(s, getSubBEnumExpr, getSubAExpr)).Select(SubMap.Rotate).ToList();
     }
 }

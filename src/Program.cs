@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SubMapper
@@ -34,6 +36,7 @@ namespace SubMapper
 
             var testTarget = new TargetType();
             var testSource2 = new SourceType();
+            var myAdder = new Func<IEnumerable<SourceSubType>, SourceSubType, IEnumerable<SourceSubType>>((ac, a) => new[] { a }.Union(ac ?? new SourceSubType[] { }));
 
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .Map(a => a.SourceString, b => b.TargetString)
@@ -41,12 +44,14 @@ namespace SubMapper
                     .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
                         .Map(a => a.SourceString2, b => b.TargetString2)
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
+
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
-                    .WithAdder((ac, a) => new[] { a }.Union(ac ?? new SourceSubType[] { }))
+                    .WithAdder(myAdder)
                     .FirstWhereEquals(a => a.NutrientKey, "NN")
                     .Map(a => a.NutrientAmount, b => b.TargetInt)
                     .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
                         .Map(a => a.SourceString2, b => b.TargetString3)))
+
                 .WithToEnumerableMapping(a => a, b => b.TargetSubs, h => Mapping.Using(h)
                     .WithAdder((bc, b) => new[] { b }.Union(bc ?? new TargetSubType[] { }).ToArray())
                     .FirstWhereEquals(b => b.NutrientKey, "JJ")
@@ -62,6 +67,7 @@ namespace SubMapper
             Console.WriteLine($"testTarget.TargetInt: {testTarget?.TargetInt}");
             Console.WriteLine($"testTarget.TargetString3: {testTarget?.TargetString3}");
             Console.WriteLine($"testTarget.TargetSubs[0].NutrientAmount: {testTarget.TargetSubs.ElementAtOrDefault(0)?.NutrientAmount}");
+            Console.WriteLine($"testTarget.TargetSubs[0].NutrientKey: {testTarget.TargetSubs.ElementAtOrDefault(0)?.NutrientKey}");
             Console.WriteLine("");
             Console.WriteLine($"testSource2.SourceString: {testSource2.SourceString}");
             Console.WriteLine($"testSource2.SourceSub.SourceSubSub.SourceString2: {testSource2.SourceSub.SourceSubSub.SourceString2}");
