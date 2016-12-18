@@ -43,12 +43,12 @@ namespace SubMapper
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
                     .WithAdder((ac, a) => new[] { a }.Union(ac ?? new SourceSubType[] { }))
                     .FirstWhereEquals(a => a.NutrientKey, "NN")
-                    .Map(a => a.NutrientAmount, b => b.TargetInt)
-                    .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
-                        .Map(a => a.SourceString2, b => b.TargetString3)));
+                    .Map(a => a.NutrientAmount, b => b.TargetInt));
+                    //.WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
+                    //    .Map(a => a.SourceString2, b => b.TargetString3)));
 
             mapping.TranslateAToB(testSource, testTarget);
-            //mapping.TranslateBToA(testSource2, testTarget);
+            mapping.TranslateBToA(testSource2, testTarget);
             var docs = mapping.GetDocumentation();
 
             Console.WriteLine("==== MAPPING TESTS ====");
@@ -57,9 +57,11 @@ namespace SubMapper
             Console.WriteLine($"testTarget.TargetInt: {testTarget?.TargetInt}");
             Console.WriteLine($"testTarget.TargetString3: {testTarget?.TargetString3}");
             Console.WriteLine("");
-            //Console.WriteLine($"testSource2.SourceString: {testSource2.SourceString}");
-            //Console.WriteLine($"testSource2.SourceSub.SourceSubSub.SourceString2: {testSource2.SourceSub.SourceSubSub.SourceString2}");
-            //Console.WriteLine("");
+            Console.WriteLine($"testSource2.SourceString: {testSource2.SourceString}");
+            Console.WriteLine($"testSource2.SourceSub.SourceSubSub.SourceString2: {testSource2.SourceSub.SourceSubSub.SourceString2}");
+            Console.WriteLine($"testSource2.SourceSubs[0].NutrientKey: {testSource2.SourceSubs.ElementAt(0).NutrientKey}");
+            Console.WriteLine($"testSource2.SourceSubs[0].NutrientAmount: {testSource2.SourceSubs.ElementAt(0).NutrientAmount}");
+            Console.WriteLine("");
             Console.WriteLine("==== DOC TESTS ====");
             Console.WriteLine(docs);
 

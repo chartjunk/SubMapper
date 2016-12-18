@@ -78,10 +78,8 @@ namespace SubMapper.EnumerableMapping
                         subAEnum = _getTSubAEnumWithAddedTSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
                         subAEnumInfo.Setter(na, subAEnum);
                     }
-                    else
-                    {
-                        prevSubMap.SetSubAFromA(subAEnum, v);
-                    }
+                    
+                    prevSubMap.SetSubAFromA(subAItem, v);
                 },
                 SetSubBFromB = (nb, v) =>
                 {
