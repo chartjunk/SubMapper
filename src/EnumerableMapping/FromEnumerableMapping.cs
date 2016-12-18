@@ -38,36 +38,6 @@ namespace SubMapper.EnumerableMapping
             Expression<Func<TNonA, IEnumerable<TSubAItem>>> getSubAExpr,
             Expression<Func<TNonB, TSubB>> getSubBExpr)
         {
-            // SubMapping
-            //return MapVia(
-            //    a => prevSubMap.GetSubAFromA(a),
-            //    b => prevSubMap.GetSubBFromB(b),
-            //    (getA, setAndGetA, v) =>
-            //    {
-            //        var a = getA() ?? setAndGetA(new TSubA());
-            //        prevSubMap.SetSubAFromA(a, v);
-            //    },
-            //    (getB, setAndGetB, v) =>
-            //    {
-            //        var b = getB() ?? setAndGetB(new TSubB());
-            //        prevSubMap.SetSubBFromB(b, v);
-            //    },
-            //    prevSubMap.SubAPropertyName,
-            //    prevSubMap.SubBPropertyName);
-
-            //// FromEnumerableMapping
-            //return MapVia(
-            //    // TODO: aggregate instead of first
-            //    a => _whereMatchess.First().GetFirstSubAItemFromSubAEnumWhereMatches(prevSubMap.GetSubAFromA(a)),
-            //    b => prevSubMap.GetSubBFromB(b),
-            //    (getA, setAndGetA, v) =>
-            //    {
-            //        var a = getA() ?? setAndGetA(new TSubAItem());
-            //        _getTSubAEnumWithAddedTSubAItem()
-            //    }
-            //    )
-
-
             var subAEnumInfo = getSubAExpr.GetMapPropertyInfo();
             var subBInfo = getSubBExpr.GetMapPropertyInfo();
 

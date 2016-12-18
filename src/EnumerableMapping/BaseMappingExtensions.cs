@@ -19,7 +19,7 @@ namespace SubMapper
             var innerBaseMapping = getInnerBaseMapping(new FromEnumerableMappingHandle<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>());
             var fromEnumerableMapping = innerBaseMapping.Extensibility.DerivedMapping as FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>;
             var fullSubMaps = fromEnumerableMapping.GetSubMapsWithAddedPath(getSubAEnumExpr, getSubBExpr);
-            //source.Extensibility.SubMaps.AddRange(fullSubMaps);
+            source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
         }
     }

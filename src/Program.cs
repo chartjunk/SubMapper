@@ -16,6 +16,14 @@ namespace SubMapper
                     {
                         SourceString2 = "toinen_source"
                     }
+                },
+                SourceSubs = new SourceSubType[]
+                {
+                    new SourceSubType
+                    {
+                        NutrientKey = "qwe",
+                        NutrientAmount = 69
+                    }
                 }
             };
 
@@ -29,21 +37,22 @@ namespace SubMapper
                         .Map(a => a.SourceString2, b => b.TargetString2)
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
-                    .WithAdder((ac, a) => new [] { a }.Union(ac??new SourceSubType[] { }))
+                    .WithAdder((ac, a) => new[] { a }.Union(ac ?? new SourceSubType[] { }))
                     .FirstWhereEquals(a => a.NutrientKey, "NN").Do()
-                    .Map(a => a.NutrientAmount, b => b.TargetInt));  
+                    .Map(a => a.NutrientAmount, b => b.TargetInt));
 
             mapping.TranslateAToB(testSource, testTarget);
-            mapping.TranslateBToA(testSource2, testTarget);
+            //mapping.TranslateBToA(testSource2, testTarget);
             var docs = mapping.GetDocumentation();
 
             Console.WriteLine("==== MAPPING TESTS ====");
             Console.WriteLine($"testTarget.TargetString: {testTarget.TargetString}");
             Console.WriteLine($"testTarget.TargetString2: {testTarget.TargetString2}");
+            Console.WriteLine($"testTarget.TargetInt: {testTarget.TargetInt}");
             Console.WriteLine("");
-            Console.WriteLine($"testSource2.SourceString: {testSource.SourceString}");
-            Console.WriteLine($"testSource2.SourceSub.SourceSubSub.SourceString2: {testSource.SourceSub.SourceSubSub.SourceString2}");
-            Console.WriteLine("");
+            //Console.WriteLine($"testSource2.SourceString: {testSource2.SourceString}");
+            //Console.WriteLine($"testSource2.SourceSub.SourceSubSub.SourceString2: {testSource2.SourceSub.SourceSubSub.SourceString2}");
+            //Console.WriteLine("");
             Console.WriteLine("==== DOC TESTS ====");
             Console.WriteLine(docs);
 
