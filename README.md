@@ -1,2 +1,2 @@
 # SubMapper
-Strongly typed, two-way POCO mapping library for C# with auto-generated documentation
+Fluent, strongly typed, two-way POCO mapping library for C# with auto-generating documentation.
