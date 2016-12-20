@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubMapper", "SubMapper\SubMapper.csproj", "{840A3CE4-E5E7-4D8B-A94D-A7A254F79043}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubMapper.UnitTest", "UnitTest\SubMapper.UnitTest.csproj", "{77EE9841-C9AF-40F6-8207-D320A57B8191}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubMapper.UnitTest", "..\test\SubMapper.UnitTest.csproj", "{77EE9841-C9AF-40F6-8207-D320A57B8191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
