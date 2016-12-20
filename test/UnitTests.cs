@@ -31,7 +31,7 @@ namespace SubMapper.UnitTest
         }
 
         [TestMethod]
-        public void MapSubTypes()
+        public void MapSubType()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .WithSubMapping(s => s.Sub1, t => t.Sub1, h => Mapping.Using(h)
@@ -86,6 +86,27 @@ namespace SubMapper.UnitTest
 
             Assert.AreEqual(si.String1, ti.Enumerable1.First(i => i.EnumerableInt1 == 1).EnumerableString1);
             Assert.AreEqual(si2.String1, ti.Enumerable1.First(i => i.EnumerableInt1 == 1).EnumerableString1);
+        }
+
+        [TestMethod]
+        public void MapFromEnumerableSubType()
+        {
+            var mapping = Mapping.FromTo<SourceType, TargetType>()
+                .WithFromEnumerableMapping(s => s.Enumerable1, t => t, h => Mapping.Using(h)
+                    .WithAdder((c, t) => (c ?? new SourceType.SourceEnumerableType[] { }).Concat(new[] { t }))
+                    .FirstWhereEquals(t => t.EnumerableInt1, 1)
+                    .WithSubMapping(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
+                        .Map(s => s.EnumerableSubString1, t => t.String1)));
+
+            var si = SourceType.GetTestInstance();
+            var ti = new TargetType();
+            var si2 = new SourceType();
+
+            mapping.TranslateAToB(si, ti);
+            mapping.TranslateBToA(si2, ti);
+
+            Assert.AreEqual(si.Enumerable1.First(i => i.EnumerableInt1 == 1).EnumerableSub1.EnumerableSubString1, ti.String1);
+            Assert.AreEqual(si2.Enumerable1.First(i => i.EnumerableInt1 == 1).EnumerableSub1.EnumerableSubString1, ti.String1);
         }
     }
 }
