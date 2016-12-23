@@ -4,7 +4,7 @@ using System.Linq;
 namespace SubMapper.UnitTest
 {
     [TestClass]
-    public class UnitTests
+    public class InitialFunctionalityTests
     {
         [TestMethod]
         public void MapDifferentBaseTypes()

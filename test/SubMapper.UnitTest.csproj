@@ -50,9 +50,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EnumerableAdderTests.cs" />
     <Compile Include="SourceType.cs" />
     <Compile Include="TargetType.cs" />
-    <Compile Include="UnitTests.cs" />
+    <Compile Include="InitialFunctionalityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

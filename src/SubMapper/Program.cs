@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.EnumerableMapping.Adders;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace SubMapper
                         .Map(a => a.SourceString2, b => b.TargetString3)))
 
                 .WithToEnumerableMapping(a => a, b => b.TargetSubs, h => Mapping.Using(h)
-                    .WithAdder((bc, b) => new[] { b }.Union(bc ?? new TargetSubType[] { }).ToArray())
+                    .WithArrayConcatAdder()
                     .FirstWhereEquals(b => b.NutrientKey, "JJ")
                     .Map(a => a.SourceInt, b => b.NutrientAmount));
 

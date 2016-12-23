@@ -55,7 +55,7 @@ namespace SubMapper.EnumerableMapping
                     {
                         subIItem = new TSubIItem();
                         typeof(TSubIItem).GetMapPropertyInfo(whereMatches.ValuePropertyName).Setter(subIItem, whereMatches.ValuePropertyValue);
-                        subIEnum = _getTSubAEnumWithAddedTSubAItem((TSubIEnum)subIEnum, (TSubIItem)subIItem);
+                        subIEnum = _getSubIEnumWithAddedSubIItem((TSubIEnum)subIEnum, (TSubIItem)subIItem);
                         subIEnumInfo.Setter(na, subIEnum);
                     }
 
