@@ -10,8 +10,6 @@ namespace SubMapper.EnumerableMapping.Adders
         public static PartialEnumerableMapping<TSubA, TSubB, IEnumerable<TSubIItem>, TSubJ, TSubIItem>
             WithArrayConcatAdder<TSubA, TSubB, TSubJ, TSubIItem>(
             this PartialEnumerableMapping<TSubA, TSubB, IEnumerable<TSubIItem>, TSubJ, TSubIItem> source)
-            where TSubA : new()
-            where TSubB : new()
             where TSubJ : new()
             where TSubIItem : new()
         {
