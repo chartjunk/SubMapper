@@ -13,7 +13,7 @@ namespace SubMapper.EnumerableMapping.Adders
             where TSubJ : new()
             where TSubIItem : new()
         {
-            source.WithAdder((bc, b) => new[] { b }.Concat(bc ?? new TSubIItem[] { }).ToArray());
+            source.WithAdder((bc, b) => (bc ?? new TSubIItem[] { }).Concat(new[] { b }).ToArray());
             return source;
         }
     }
