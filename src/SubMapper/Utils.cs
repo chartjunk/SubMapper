@@ -32,6 +32,7 @@ namespace SubMapper
             public Func<object, object> Getter { get; private set; }
             public Action<object, object> Setter { get; private set; }
             public string PropertyName { get; private set; }
+            public PropertyInfo PropertyInfo { get; set; }
 
             public MapPropertyInfo(PropertyInfo propertyInfo)
             {
@@ -41,12 +42,14 @@ namespace SubMapper
                     Getter = i => propertyInfo.GetValue(i);
                     Setter = (i, v) => propertyInfo.SetValue(i, v);
                     PropertyName = propertyInfo.Name;
+                    PropertyInfo = propertyInfo;
                 }
                 else
                 {
                     Getter = i => i;
                     Setter = null;
                     PropertyName = "TODO";
+                    PropertyInfo = null;
                 }
             }
         }

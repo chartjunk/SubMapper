@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,7 @@ namespace SubMapper
         // TODO:
         public string GetDocumentation()
             => string.Join(Environment.NewLine, _subMaps.Select(s => s.SubAPropertyName + " MAPS TO " + s.SubBPropertyName));
+        
+        public IEnumerable<MetaMap> MetaMaps => _subMaps.Select(s => s.MetaMap.Value);
     }
 }

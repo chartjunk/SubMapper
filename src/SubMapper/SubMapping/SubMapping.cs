@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -42,6 +43,23 @@ namespace SubMapper.SubMapping
                     if (b == null) return null;
                     return prevSubMap.GetSubBFromB(b);
                 },
+
+                MetaMap = new Lazy<MetaMap>(() => new MetaMap
+                {
+                    MetadataType = typeof(SubMappingMetadata),
+                    Metadata = new SubMappingMetadata
+                    {
+                        SuperAProperty = aInfo.PropertyInfo,
+                        SubAProperty = prevSubMap.SubAPropertyInfo,
+                        IsSuperAAndSubADifferent = aInfo.PropertyName != prevSubMap.SubAPropertyInfo.Name, // TODO
+
+                        SuperBProperty = bInfo.PropertyInfo,
+                        SubBProperty = prevSubMap.SubBPropertyInfo,
+                        IsSuperBAndSubBDifferent = bInfo.PropertyName != prevSubMap.SubBPropertyInfo.Name, // TODO
+
+                        SubMetaMap = prevSubMap.MetaMap.Value
+                    }
+                }),
 
                 // TODO
                 SubAPropertyName = aInfo.Setter == null ? prevSubMap.SubAPropertyName : (aInfo.PropertyName + "." + prevSubMap.SubAPropertyName),

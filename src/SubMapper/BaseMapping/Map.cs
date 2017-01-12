@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.Metadata;
+using System;
 using System.Linq.Expressions;
 
 namespace SubMapper
@@ -19,6 +20,20 @@ namespace SubMapper
 
                 SetSubAFromA = (a, v) => { if (v == null) return; subAInfo.Setter(a, v); },
                 SetSubBFromB = (b, v) => { if (v == null) return; subBInfo.Setter(b, v); },
+
+                SubAPropertyInfo = subAInfo.PropertyInfo,
+                SubBPropertyInfo = subBInfo.PropertyInfo,
+
+                MetaMap = new Lazy<MetaMap>(() => new MetaMap
+                {
+                    MetadataType = typeof(BaseMapping.BaseMappingMetadata),
+                    Metadata = new BaseMapping.BaseMappingMetadata
+                    {
+                        SuperAProperty = subAInfo.PropertyInfo,
+                        SuperBProperty = subBInfo.PropertyInfo,
+                        SubMetaMap = null
+                    }
+                }),
 
                 SubAPropertyName = subAInfo.PropertyName,
                 SubBPropertyName = subBInfo.PropertyName

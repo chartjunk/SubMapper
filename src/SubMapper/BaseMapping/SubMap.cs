@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SubMapper.Metadata;
+using System.Reflection;
 
 namespace SubMapper
 {
@@ -14,6 +16,13 @@ namespace SubMapper
         public string SubAPropertyName { get; set; }
         public string SubBPropertyName { get; set; }
 
+        // TODO: alusta
+        public PropertyInfo SubAPropertyInfo { get; set; }
+        public PropertyInfo SubBPropertyInfo { get; set; }
+
+        // TODO: Refactor SubMap similarly to MetaMap
+        public Lazy<MetaMap> MetaMap { get; set; }
+
         public static SubMap Rotate(SubMap subMap)
         {
             return new SubMap
@@ -25,7 +34,11 @@ namespace SubMapper
                 SetSubBFromB = subMap.SetSubAFromA,
 
                 SubAPropertyName = subMap.SubBPropertyName,
-                SubBPropertyName = subMap.SubAPropertyName
+                SubBPropertyName = subMap.SubAPropertyName,
+
+                // TODO alusta
+                SubAPropertyInfo = subMap.SubBPropertyInfo,
+                SubBPropertyInfo = subMap.SubAPropertyInfo
             };
         }
     }

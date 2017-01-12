@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -42,6 +43,27 @@ namespace SubMapper.EnumerableMapping
                 // TODO
                 SubAPropertyName = "TODO", //subAEnumInfo.Setter == null ? prevSubMap.SubAPropertyName : (aInfo.PropertyName + "." + prevSubMap.SubAPropertyName),
                 SubBPropertyName = subJInfo.Setter == null ? prevSubMap.SubBPropertyName : (subJInfo.PropertyName + "." + prevSubMap.SubBPropertyName),
+
+                SubAPropertyInfo = subIEnumInfo.PropertyInfo,
+                SubBPropertyInfo = subJInfo.PropertyInfo,
+
+                MetaMap = new Lazy<MetaMap>(() => new MetaMap
+                {
+                    MetadataType = typeof(PartialEnumerableMappingMetadata),
+                    Metadata = new PartialEnumerableMappingMetadata
+                    {
+                        // TODO: WHERE infos
+
+                        SuperIEnumProperty = subIEnumInfo.PropertyInfo,
+                        SubIEnumProperty = prevSubMap.SubAPropertyInfo,
+
+                        SuperJProperty = subJInfo.PropertyInfo,
+                        SubJProperty = prevSubMap.SubBPropertyInfo,
+                        IsSuperJAndSubJDifferent = subJInfo.PropertyName != prevSubMap.SubBPropertyInfo.Name, // TODO
+
+                        SubMetaMap = prevSubMap.MetaMap.Value
+                    }
+                }),
 
                 SetSubAFromA = (na, v) =>
                 {
