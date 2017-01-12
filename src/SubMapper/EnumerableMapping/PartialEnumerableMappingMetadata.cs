@@ -12,6 +12,6 @@ namespace SubMapper.EnumerableMapping
         public PropertyInfo SubJProperty { get; set; }
         public bool IsSuperJAndSubJDifferent { get; set; }
 
-        public MetaMap SubMetaMap { get; set; }
+        public bool IsRotated { get; set; }
     }
 }

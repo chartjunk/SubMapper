@@ -13,6 +13,7 @@ namespace SubMapper.EnumerableMapping
     {
         public ToEnumerableMapping()
         {
+            IsRotated = true;
             Extensibility.DerivedMapping = this;
         }
 

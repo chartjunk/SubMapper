@@ -37,8 +37,10 @@ namespace SubMapper
                 SubBPropertyName = subMap.SubAPropertyName,
 
                 // TODO alusta
-                SubAPropertyInfo = subMap.SubBPropertyInfo,
-                SubBPropertyInfo = subMap.SubAPropertyInfo
+                SubAPropertyInfo = subMap.SubAPropertyInfo,
+                SubBPropertyInfo = subMap.SubBPropertyInfo,
+
+                MetaMap = subMap.MetaMap
             };
         }
     }

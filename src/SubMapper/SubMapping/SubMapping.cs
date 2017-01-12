@@ -29,6 +29,14 @@ namespace SubMapper.SubMapping
             var aInfo = getSubAExpr.GetMapPropertyInfo();
             var bInfo = getSubBExpr.GetMapPropertyInfo();
 
+            // TODO: refactor
+            var aPropertyInfo = aInfo.PropertyInfo;
+            if(aInfo.Setter == null)
+                aPropertyInfo = prevSubMap.SubAPropertyInfo;
+            var bPropertyInfo = bInfo.PropertyInfo;
+            if(bInfo.Setter == null)
+                bPropertyInfo = prevSubMap.SubBPropertyInfo;
+
             var result = new SubMap
             {
                 GetSubAFromA = na =>
@@ -44,21 +52,23 @@ namespace SubMapper.SubMapping
                     return prevSubMap.GetSubBFromB(b);
                 },
 
+                SubAPropertyInfo = aPropertyInfo,
+                SubBPropertyInfo = bPropertyInfo,
+
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
                     MetadataType = typeof(SubMappingMetadata),
                     Metadata = new SubMappingMetadata
                     {
-                        SuperAProperty = aInfo.PropertyInfo,
+                        SuperAProperty = aPropertyInfo,
                         SubAProperty = prevSubMap.SubAPropertyInfo,
-                        IsSuperAAndSubADifferent = aInfo.PropertyName != prevSubMap.SubAPropertyInfo.Name, // TODO
+                        IsSuperAAndSubADifferent = aPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
 
-                        SuperBProperty = bInfo.PropertyInfo,
+                        SuperBProperty = bPropertyInfo,
                         SubBProperty = prevSubMap.SubBPropertyInfo,
-                        IsSuperBAndSubBDifferent = bInfo.PropertyName != prevSubMap.SubBPropertyInfo.Name, // TODO
-
-                        SubMetaMap = prevSubMap.MetaMap.Value
-                    }
+                        IsSuperBAndSubBDifferent = bPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO                        
+                    },
+                    SubMetaMap = prevSubMap.MetaMap.Value
                 }),
 
                 // TODO

@@ -11,7 +11,7 @@ namespace SubMapper
             Expression<Func<TB, TValue>> getSubBExpr)
         { 
             var subAInfo = Utils.GetMapPropertyInfo(getSubAExpr);
-            var subBInfo = Utils.GetMapPropertyInfo(getSubBExpr);
+            var subBInfo = Utils.GetMapPropertyInfo(getSubBExpr);            
 
             var subMap = new SubMap
             {
@@ -30,9 +30,9 @@ namespace SubMapper
                     Metadata = new BaseMapping.BaseMappingMetadata
                     {
                         SuperAProperty = subAInfo.PropertyInfo,
-                        SuperBProperty = subBInfo.PropertyInfo,
-                        SubMetaMap = null
-                    }
+                        SuperBProperty = subBInfo.PropertyInfo
+                    },
+                    SubMetaMap = null
                 }),
 
                 SubAPropertyName = subAInfo.PropertyName,

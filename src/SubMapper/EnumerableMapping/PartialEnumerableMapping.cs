@@ -14,6 +14,8 @@ namespace SubMapper.EnumerableMapping
         where TSubJ : new()
         where TSubIItem : new()
     {
+        protected bool IsRotated { get; set; }
+
         protected SubMap MapFromEnumerableVia<TNonI, TNonJ>(
             SubMap prevSubMap,
             Expression<Func<TNonI, IEnumerable<TSubIItem>>> getSubIExpr,
@@ -21,6 +23,11 @@ namespace SubMapper.EnumerableMapping
         {
             var subIEnumInfo = getSubIExpr.GetMapPropertyInfo();
             var subJInfo = getSubJExpr.GetMapPropertyInfo();
+
+            // TODO: refactor
+            // TODO: does rotated map properly? SubIEnum -> SubA??? Nope, they dont
+            var subIEnumPropertyInfo = subIEnumInfo.PropertyInfo ?? (IsRotated ? prevSubMap.SubBPropertyInfo : prevSubMap.SubAPropertyInfo);
+            var subJPropertyInfo = subJInfo.PropertyInfo ?? (IsRotated ? prevSubMap.SubBPropertyInfo : prevSubMap.SubBPropertyInfo);
 
             var result = new SubMap
             {
@@ -44,25 +51,46 @@ namespace SubMapper.EnumerableMapping
                 SubAPropertyName = "TODO", //subAEnumInfo.Setter == null ? prevSubMap.SubAPropertyName : (aInfo.PropertyName + "." + prevSubMap.SubAPropertyName),
                 SubBPropertyName = subJInfo.Setter == null ? prevSubMap.SubBPropertyName : (subJInfo.PropertyName + "." + prevSubMap.SubBPropertyName),
 
-                SubAPropertyInfo = subIEnumInfo.PropertyInfo,
-                SubBPropertyInfo = subJInfo.PropertyInfo,
+                SubAPropertyInfo = subIEnumPropertyInfo,
+                SubBPropertyInfo = subJPropertyInfo,
 
-                MetaMap = new Lazy<MetaMap>(() => new MetaMap
+                MetaMap =
+                IsRotated ?
+                new Lazy<MetaMap>(() => new MetaMap
                 {
                     MetadataType = typeof(PartialEnumerableMappingMetadata),
                     Metadata = new PartialEnumerableMappingMetadata
                     {
                         // TODO: WHERE infos
 
-                        SuperIEnumProperty = subIEnumInfo.PropertyInfo,
+                        SuperIEnumProperty = subIEnumPropertyInfo,
+                        SubIEnumProperty = prevSubMap.SubBPropertyInfo,
+
+                        SuperJProperty = subJPropertyInfo,
+                        SubJProperty = prevSubMap.SubAPropertyInfo,
+                        IsSuperJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
+
+                        IsRotated = IsRotated
+                    },
+                    SubMetaMap = prevSubMap.MetaMap.Value
+                }) :
+                new Lazy<MetaMap>(() => new MetaMap
+                {
+                    MetadataType = typeof(PartialEnumerableMappingMetadata),
+                    Metadata = new PartialEnumerableMappingMetadata
+                    {
+                        // TODO: WHERE infos
+
+                        SuperIEnumProperty = subIEnumPropertyInfo,
                         SubIEnumProperty = prevSubMap.SubAPropertyInfo,
 
-                        SuperJProperty = subJInfo.PropertyInfo,
+                        SuperJProperty = subJPropertyInfo,
                         SubJProperty = prevSubMap.SubBPropertyInfo,
-                        IsSuperJAndSubJDifferent = subJInfo.PropertyName != prevSubMap.SubBPropertyInfo.Name, // TODO
+                        IsSuperJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO
 
-                        SubMetaMap = prevSubMap.MetaMap.Value
-                    }
+                        IsRotated = IsRotated
+                    },
+                    SubMetaMap = prevSubMap.MetaMap.Value
                 }),
 
                 SetSubAFromA = (na, v) =>

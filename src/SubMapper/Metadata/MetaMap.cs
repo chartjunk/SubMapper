@@ -6,5 +6,6 @@ namespace SubMapper.Metadata
     {
         public Type MetadataType { get; set; }
         public object Metadata { get; set; }
+        public MetaMap SubMetaMap { get; set; }
     }
 }

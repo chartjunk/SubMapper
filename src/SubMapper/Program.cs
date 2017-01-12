@@ -56,11 +56,15 @@ namespace SubMapper
                 .WithToEnumerableMapping(a => a, b => b.TargetSubs, h => Mapping.Using(h)
                     .WithArrayConcatAdder()
                     .FirstWhereEquals(b => b.NutrientKey, "JJ")
-                    .Map(a => a.SourceInt, b => b.NutrientAmount));
+                    .Map(a => a.SourceInt, b => b.NutrientAmount))
+                    ;
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);
             var docs = mapping.GetDocumentation();
+
+            var metaMaps = mapping.MetaMaps.ToList();
+            var extract = new Metadata.Extractor(metaMaps).Extract();
 
             Console.WriteLine("==== MAPPING TESTS ====");
             Console.WriteLine($"testTarget.TargetString: {testTarget?.TargetString}");
@@ -77,7 +81,7 @@ namespace SubMapper
             Console.WriteLine($"testSource2.SourceInt: {testSource2.SourceInt}");
             Console.WriteLine("");
             Console.WriteLine("==== DOC TESTS ====");
-            Console.WriteLine(docs);
+            //Console.WriteLine(docs);
 
             Console.ReadKey();
         }

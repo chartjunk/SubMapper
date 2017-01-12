@@ -12,7 +12,5 @@ namespace SubMapper.SubMapping
         public PropertyInfo SuperBProperty { get; set; }
         public PropertyInfo SubBProperty { get; set; }
         public bool IsSuperBAndSubBDifferent { get; set; }
-
-        public MetaMap SubMetaMap { get; set; }
     }
 }
