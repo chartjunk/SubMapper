@@ -11,7 +11,12 @@ namespace SubMapper
         public void TranslateBToA(TA A, TB B)
             => TranslateIToJ(B, A, _subMaps.Select(GetBToAIToJFrom).ToList());
 
-        private void TranslateIToJ<TI, TJ>(TI I, TJ J, List<IToJSubMap> IToJSubMaps)            
-            => IToJSubMaps.ForEach(k => k.SetSubJFromJ(J, k.GetSubIFromI(I)));        
+        private void TranslateIToJ<TI, TJ>(TI I, TJ J, List<SubMap> IToJSubMaps)
+        {
+            foreach (var k in IToJSubMaps)
+            {
+                k.HalfSubMapPair.JHalfSubMap.SetSubFrom(J, k.HalfSubMapPair.IHalfSubMap.GetSubFrom(I));
+            }
+        }
     }
 }

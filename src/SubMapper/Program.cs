@@ -56,8 +56,7 @@ namespace SubMapper
                 .WithToEnumerableMapping(a => a, b => b.TargetSubs, h => Mapping.Using(h)
                     .WithArrayConcatAdder()
                     .FirstWhereEquals(b => b.NutrientKey, "JJ")
-                    .Map(a => a.SourceInt, b => b.NutrientAmount))
-                    ;
+                    .Map(a => a.SourceInt, b => b.NutrientAmount));
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);

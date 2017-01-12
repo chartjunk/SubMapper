@@ -11,11 +11,8 @@ namespace SubMapper
     {
         // TODO:
         public string GetDocumentation()
-            => string.Join(Environment.NewLine, _subMaps.Select(s => s.SubAPropertyName + " MAPS TO " + s.SubBPropertyName));
+            => string.Join(Environment.NewLine, _subMaps.Select(s => s.HalfSubMapPair.IHalfSubMap + " MAPS TO " + s.HalfSubMapPair.JHalfSubMap));
         
-        public IEnumerable<MetaMap> MetaMaps => _subMaps.Select(s =>
-        {
-            return s.MetaMap.Value;
-        });
+        public IEnumerable<MetaMap> MetaMaps => _subMaps.Select(s => s.MetaMap.Value);
     }
 }

@@ -15,14 +15,22 @@ namespace SubMapper
 
             var subMap = new SubMap
             {
-                GetSubAFromA = a => subAInfo.Getter(a),
-                GetSubBFromB = b => subBInfo.Getter(b),
+                HalfSubMapPair = new HalfSubMapPair
+                {
+                    AHalfSubMap = new HalfSubMap
+                    {
+                        GetSubFrom = subAInfo.Getter,
+                        SetSubFrom = (a, v) => { if (v == null) return; subAInfo.Setter(a, v); },
+                        PropertyInfo = subAInfo.PropertyInfo
+                    },
 
-                SetSubAFromA = (a, v) => { if (v == null) return; subAInfo.Setter(a, v); },
-                SetSubBFromB = (b, v) => { if (v == null) return; subBInfo.Setter(b, v); },
-
-                SubAPropertyInfo = subAInfo.PropertyInfo,
-                SubBPropertyInfo = subBInfo.PropertyInfo,
+                    BHalfSubMap = new HalfSubMap
+                    {
+                        GetSubFrom = subBInfo.Getter,
+                        SetSubFrom = (b, v) => { if (v == null) return; subBInfo.Setter(b, v); },
+                        PropertyInfo = subBInfo.PropertyInfo
+                    }
+                },
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
@@ -34,9 +42,6 @@ namespace SubMapper
                     },
                     SubMetaMap = null
                 }),
-
-                SubAPropertyName = subAInfo.PropertyName,
-                SubBPropertyName = subBInfo.PropertyName
             };
 
             _subMaps.Add(subMap);

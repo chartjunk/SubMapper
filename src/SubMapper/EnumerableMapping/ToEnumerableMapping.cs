@@ -20,6 +20,6 @@ namespace SubMapper.EnumerableMapping
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr)
-            => _subMaps.Select(SubMap.Rotate).Select(s => MapFromEnumerableVia(s, getSubBEnumExpr, getSubAExpr)).Select(SubMap.Rotate).ToList();
+            => _subMaps.Select(SubMap.Reverse).Select(s => MapFromEnumerableVia(s, getSubBEnumExpr, getSubAExpr)).Select(SubMap.Reverse).ToList();
     }
 }
