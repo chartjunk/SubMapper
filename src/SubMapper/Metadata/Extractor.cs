@@ -43,13 +43,13 @@ namespace SubMapper.Metadata
                         var m = ((EnumerableMapping.PartialEnumerableMappingMetadata)currentMap.Metadata);
                         if (m.IsRotated)
                         {
-                            currentBString += "." + m.SuperIEnumProperty.Name + "[]." + m.SubIEnumProperty.Name;
+                            currentBString += "." + m.SuperIEnumProperty.Name + "[]";
                             if (m.IsSuperJAndSubJDifferent)
                                 currentAString += "." + m.SuperJProperty.Name;
                         }
                         else
                         {
-                            currentAString += "." + m.SuperIEnumProperty.Name + "[]." + m.SubIEnumProperty.Name;
+                            currentAString += "." + m.SuperIEnumProperty.Name + "[]";
                             if (m.IsSuperJAndSubJDifferent)
                                 currentBString += "." + m.SuperJProperty.Name;
                         }
