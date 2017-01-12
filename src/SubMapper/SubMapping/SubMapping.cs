@@ -60,13 +60,13 @@ namespace SubMapper.SubMapping
                     MetadataType = typeof(SubMappingMetadata),
                     Metadata = new SubMappingMetadata
                     {
-                        SuperAProperty = aPropertyInfo,
-                        SubAProperty = prevSubMap.SubAPropertyInfo,
-                        IsSuperAAndSubADifferent = aPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
+                        APropertyInfo = aPropertyInfo,
+                        SubAPropertyInfo = prevSubMap.SubAPropertyInfo,
+                        IsAAndSubADifferent = aPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
 
-                        SuperBProperty = bPropertyInfo,
-                        SubBProperty = prevSubMap.SubBPropertyInfo,
-                        IsSuperBAndSubBDifferent = bPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO                        
+                        BPropertyInfo = bPropertyInfo,
+                        SubBPropertyInfo = prevSubMap.SubBPropertyInfo,
+                        IsBAndSubBDifferent = bPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO                        
                     },
                     SubMetaMap = prevSubMap.MetaMap.Value
                 }),

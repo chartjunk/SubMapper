@@ -29,8 +29,8 @@ namespace SubMapper
                     MetadataType = typeof(BaseMapping.BaseMappingMetadata),
                     Metadata = new BaseMapping.BaseMappingMetadata
                     {
-                        SuperAProperty = subAInfo.PropertyInfo,
-                        SuperBProperty = subBInfo.PropertyInfo
+                        APropertyInfo = subAInfo.PropertyInfo,
+                        BPropertyInfo = subBInfo.PropertyInfo
                     },
                     SubMetaMap = null
                 }),

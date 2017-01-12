@@ -29,29 +29,29 @@ namespace SubMapper.Metadata
                     if (currentMap.MetadataType.Equals(typeof(BaseMapping.BaseMappingMetadata)))
                     {
                         var m = ((BaseMapping.BaseMappingMetadata)currentMap.Metadata);
-                        currentAString += "." + m.SuperAProperty.Name;
-                        currentBString += "." + m.SuperBProperty.Name;
+                        currentAString += "." + m.APropertyInfo.Name;
+                        currentBString += "." + m.BPropertyInfo.Name;
                     }
                     else if (currentMap.MetadataType.Equals(typeof(SubMapping.SubMappingMetadata)))
                     {
                         var m = ((SubMapping.SubMappingMetadata)currentMap.Metadata);
-                        if (m.IsSuperAAndSubADifferent) currentAString += "." + m.SuperAProperty.Name;
-                        if (m.IsSuperBAndSubBDifferent) currentBString += "." + m.SuperBProperty.Name;
+                        if (m.IsAAndSubADifferent) currentAString += "." + m.APropertyInfo.Name;
+                        if (m.IsBAndSubBDifferent) currentBString += "." + m.BPropertyInfo.Name;
                     }
                     else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.PartialEnumerableMappingMetadata)))
                     {
                         var m = ((EnumerableMapping.PartialEnumerableMappingMetadata)currentMap.Metadata);
                         if (m.IsRotated)
                         {
-                            currentBString += "." + m.SuperIEnumProperty.Name + "[]";
-                            if (m.IsSuperJAndSubJDifferent)
-                                currentAString += "." + m.SuperJProperty.Name;
+                            currentBString += "." + m.IEnumPropertyInfo.Name + "[]";
+                            if (m.IsJAndSubJDifferent)
+                                currentAString += "." + m.JPropertyInfo.Name;
                         }
                         else
                         {
-                            currentAString += "." + m.SuperIEnumProperty.Name + "[]";
-                            if (m.IsSuperJAndSubJDifferent)
-                                currentBString += "." + m.SuperJProperty.Name;
+                            currentAString += "." + m.IEnumPropertyInfo.Name + "[]";
+                            if (m.IsJAndSubJDifferent)
+                                currentBString += "." + m.JPropertyInfo.Name;
                         }
                     }
 

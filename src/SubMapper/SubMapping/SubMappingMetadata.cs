@@ -5,12 +5,12 @@ namespace SubMapper.SubMapping
 {
     public class SubMappingMetadata : IMappingMetadata
     {
-        public PropertyInfo SuperAProperty { get; set; }
-        public PropertyInfo SubAProperty { get; set; }
-        public bool IsSuperAAndSubADifferent { get; set; }
+        public PropertyInfo APropertyInfo { get; set; }
+        public PropertyInfo SubAPropertyInfo { get; set; }
+        public bool IsAAndSubADifferent { get; set; }
 
-        public PropertyInfo SuperBProperty { get; set; }
-        public PropertyInfo SubBProperty { get; set; }
-        public bool IsSuperBAndSubBDifferent { get; set; }
+        public PropertyInfo BPropertyInfo { get; set; }
+        public PropertyInfo SubBPropertyInfo { get; set; }
+        public bool IsBAndSubBDifferent { get; set; }
     }
 }

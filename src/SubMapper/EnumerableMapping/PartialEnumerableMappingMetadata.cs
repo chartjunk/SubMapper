@@ -5,12 +5,12 @@ namespace SubMapper.EnumerableMapping
 {
     public class PartialEnumerableMappingMetadata : IMappingMetadata
     {
-        public PropertyInfo SuperIEnumProperty { get; set; }
-        public PropertyInfo SubIEnumProperty { get; set; }
+        public PropertyInfo IEnumPropertyInfo { get; set; }
+        public PropertyInfo SubIEnumPropertyInfo { get; set; }
 
-        public PropertyInfo SuperJProperty { get; set; }
-        public PropertyInfo SubJProperty { get; set; }
-        public bool IsSuperJAndSubJDifferent { get; set; }
+        public PropertyInfo JPropertyInfo { get; set; }
+        public PropertyInfo SubJPropertyInfo { get; set; }
+        public bool IsJAndSubJDifferent { get; set; }
 
         public bool IsRotated { get; set; }
     }

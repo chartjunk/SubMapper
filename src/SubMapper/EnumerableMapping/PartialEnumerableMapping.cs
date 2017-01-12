@@ -63,12 +63,12 @@ namespace SubMapper.EnumerableMapping
                     {
                         // TODO: WHERE infos
 
-                        SuperIEnumProperty = subIEnumPropertyInfo,
-                        SubIEnumProperty = prevSubMap.SubBPropertyInfo,
+                        IEnumPropertyInfo = subIEnumPropertyInfo,
+                        SubIEnumPropertyInfo = prevSubMap.SubBPropertyInfo,
 
-                        SuperJProperty = subJPropertyInfo,
-                        SubJProperty = prevSubMap.SubAPropertyInfo,
-                        IsSuperJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
+                        JPropertyInfo = subJPropertyInfo,
+                        SubJPropertyInfo = prevSubMap.SubAPropertyInfo,
+                        IsJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubAPropertyInfo.Name, // TODO
 
                         IsRotated = IsRotated
                     },
@@ -81,12 +81,12 @@ namespace SubMapper.EnumerableMapping
                     {
                         // TODO: WHERE infos
 
-                        SuperIEnumProperty = subIEnumPropertyInfo,
-                        SubIEnumProperty = prevSubMap.SubAPropertyInfo,
+                        IEnumPropertyInfo = subIEnumPropertyInfo,
+                        SubIEnumPropertyInfo = prevSubMap.SubAPropertyInfo,
 
-                        SuperJProperty = subJPropertyInfo,
-                        SubJProperty = prevSubMap.SubBPropertyInfo,
-                        IsSuperJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO
+                        JPropertyInfo = subJPropertyInfo,
+                        SubJPropertyInfo = prevSubMap.SubBPropertyInfo,
+                        IsJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.SubBPropertyInfo.Name, // TODO
 
                         IsRotated = IsRotated
                     },
