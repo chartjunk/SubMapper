@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EnumerableWhereTests.cs" />
     <Compile Include="EnumerableAdderTests.cs" />
     <Compile Include="SourceType.cs" />
     <Compile Include="TargetType.cs" />
