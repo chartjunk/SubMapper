@@ -60,7 +60,7 @@ namespace SubMapper
             mapping.TranslateBToA(testSource2, testTarget);
             var docs = mapping.GetDocumentation();
 
-            var metaMaps = mapping.MetaMaps.ToList();
+            var metaMaps = mapping.MetaMaps;
             var extract = new Metadata.SimpleStringMappingExtractor(metaMaps).Extract();
 
             Console.WriteLine("==== MAPPING TESTS ====");

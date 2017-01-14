@@ -8,9 +8,9 @@ namespace SubMapper.Metadata
 {
     public class SimpleStringMappingExtractor
     {
-        private readonly List<MetaMap> _rootMetaMaps;
+        private readonly IEnumerable<MetaMap> _rootMetaMaps;
 
-        public SimpleStringMappingExtractor(List<MetaMap> rootMetaMaps)
+        public SimpleStringMappingExtractor(IEnumerable<MetaMap> rootMetaMaps)
         {
             _rootMetaMaps = rootMetaMaps;
         }
