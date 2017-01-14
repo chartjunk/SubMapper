@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SubMapper.EnumerableMapping.Where;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SubMapper.EnumerableMapping
 {
@@ -20,23 +22,22 @@ namespace SubMapper.EnumerableMapping
             public object ValuePropertyValue { get; set; }
         }
 
-        public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> FirstWhereEquals<TValue>(
-            Expression<Func<TSubIItem, TValue>> getValue, TValue equalValue)
+        public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> First(
+            Expression<Func<TSubIItem, bool>> equalsExpression)
         {
-            var subAItemValuePropertyInfo = getValue.GetMapPropertyInfo();
-            var getFirstSubAItemFromSubAEnumWhereMatches =
-                new Func<TSubIEnum, TSubIItem>(subIEnum =>
-                    subIEnum != null
-                    ? subIEnum.FirstOrDefault(i => subAItemValuePropertyInfo.Getter(i).Equals(equalValue))
-                    : default(TSubIItem));
-
-            _whereMatchess.Add(new WhereMatchesContainer
+            var subIItemValuePropertyInfo = ((((equalsExpression as LambdaExpression).Body as BinaryExpression).Left as MemberExpression).Member as PropertyInfo);
+            var getter = new Func<object, object>(p => subIItemValuePropertyInfo.GetValue(p));
+            var expressionVisitor = new MapWhereExpressionVisitor();
+            expressionVisitor.Visit(equalsExpression);
+            expressionVisitor.WhereEqualsKeyValues.ForEach(i => _whereMatchess.Add(new WhereMatchesContainer
             {
-                GetFirstSubAItemFromSubAEnumWhereMatches = getFirstSubAItemFromSubAEnumWhereMatches,
-                ValuePropertyName = subAItemValuePropertyInfo.PropertyName,
-                ValuePropertyValue = equalValue
-            });
-
+                ValuePropertyName = i.Item1,
+                ValuePropertyValue = i.Item2,
+                GetFirstSubAItemFromSubAEnumWhereMatches = new Func<TSubIEnum, TSubIItem>(subIEnum =>
+                    subIEnum != null
+                    ? subIEnum.FirstOrDefault(j => getter(j).Equals(i.Item2))
+                    : default(TSubIItem))
+            }));
             return this;
         }
     }

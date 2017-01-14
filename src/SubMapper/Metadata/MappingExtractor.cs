@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SubMapper.Metadata
 {
-    public class Extractor
+    public class SimpleStringMappingExtractor
     {
         private readonly List<MetaMap> _rootMetaMaps;
 
-        public Extractor(List<MetaMap> rootMetaMaps)
+        public SimpleStringMappingExtractor(List<MetaMap> rootMetaMaps)
         {
             _rootMetaMaps = rootMetaMaps;
         }

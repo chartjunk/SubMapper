@@ -13,7 +13,7 @@ namespace SubMapper.UnitTest
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .WithFromEnumerableMapping(s => s.Enumerable1, t => t, h => Mapping.Using(h)
                     .WithArrayConcatAdder()
-                    .FirstWhereEquals(t => t.EnumerableInt1, 1)
+                    .First(t => t.EnumerableInt1 == 1)
                     .WithSubMapping(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
                         .Map(s => s.EnumerableSubString1, t => t.String1)));
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace SubMapper
 {
@@ -37,7 +38,7 @@ namespace SubMapper
 
             var testTarget = new TargetType();
             var testSource2 = new SourceType();
-            var myAdder = new Func<IEnumerable<SourceSubType>, SourceSubType, IEnumerable<SourceSubType>>((ac, a) => new[] { a }.Union(ac ?? new SourceSubType[] { }));
+            var myAdder = new Func<IEnumerable<SourceSubType>, SourceSubType, IEnumerable<SourceSubType>>((ac, a) => new[] { a }.Concat(ac ?? new SourceSubType[] { }));
 
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .Map(a => a.SourceString, b => b.TargetString)
@@ -47,15 +48,15 @@ namespace SubMapper
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
 
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
-                    .WithAdder(myAdder)
-                    .FirstWhereEquals(a => a.NutrientKey, "NN")
+                    .WithAdder(myAdder)                    
+                    .First(a => a.NutrientKey == "NN")
                     .Map(a => a.NutrientAmount, b => b.TargetInt)
                     .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
                         .Map(a => a.SourceString2, b => b.TargetString3)))
 
                 .WithToEnumerableMapping(a => a, b => b.TargetSubs, h => Mapping.Using(h)
                     .WithArrayConcatAdder()
-                    .FirstWhereEquals(b => b.NutrientKey, "JJ")
+                    .First(b => b.NutrientKey == "JJ")
                     .Map(a => a.SourceInt, b => b.NutrientAmount));
 
             mapping.TranslateAToB(testSource, testTarget);
@@ -63,7 +64,7 @@ namespace SubMapper
             var docs = mapping.GetDocumentation();
 
             var metaMaps = mapping.MetaMaps.ToList();
-            var extract = new Metadata.Extractor(metaMaps).Extract();
+            var extract = new Metadata.SimpleStringMappingExtractor(metaMaps).Extract();
 
             Console.WriteLine("==== MAPPING TESTS ====");
             Console.WriteLine($"testTarget.TargetString: {testTarget?.TargetString}");
