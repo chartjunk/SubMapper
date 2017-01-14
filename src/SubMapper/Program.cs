@@ -49,7 +49,7 @@ namespace SubMapper
 
                 .WithFromEnumerableMapping(a => a.SourceSubs, b => b, h => Mapping.Using(h)
                     .WithAdder(myAdder)                    
-                    .First(a => a.NutrientKey == "NN")
+                    .First(a => a.NutrientKey == "NN" && a.NutrientAmount == 69)
                     .Map(a => a.NutrientAmount, b => b.TargetInt)
                     .WithSubMapping(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
                         .Map(a => a.SourceString2, b => b.TargetString3)))

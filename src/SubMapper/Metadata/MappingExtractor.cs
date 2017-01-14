@@ -41,15 +41,16 @@ namespace SubMapper.Metadata
                     else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.PartialEnumerableMappingMetadata)))
                     {
                         var m = ((EnumerableMapping.PartialEnumerableMappingMetadata)currentMap.Metadata);
+                        var whereEquals = string.Join(" AND ", m.WhereEquals.Select(i => i.PropertyInfo.Name + "=" + Convert.ToString(i.EqualValue) ?? ""));
                         if (m.MappingViewType == MappingViewType.JisAandIisB)
                         {
-                            currentBString += "." + m.IEnumPropertyInfo.Name + "[]";
+                            currentBString += "." + m.IEnumPropertyInfo.Name + $"[{whereEquals}]";
                             if (m.IsJAndSubJDifferent)
                                 currentAString += "." + m.JPropertyInfo.Name;
                         }
                         else
                         {
-                            currentAString += "." + m.IEnumPropertyInfo.Name + "[]";
+                            currentAString += "." + m.IEnumPropertyInfo.Name + $"[{whereEquals}]";
                             if (m.IsJAndSubJDifferent)
                                 currentBString += "." + m.JPropertyInfo.Name;
                         }
