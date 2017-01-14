@@ -6,19 +6,12 @@ using System.Threading.Tasks;
 
 namespace SubMapper.Metadata
 {
-    public class SimpleStringMappingExtractor
-    {
-        private readonly IEnumerable<MetaMap> _rootMetaMaps;
-
-        public SimpleStringMappingExtractor(IEnumerable<MetaMap> rootMetaMaps)
-        {
-            _rootMetaMaps = rootMetaMaps;
-        }
-
-        public List<string> Extract()
+    public static class SimpleStringExtraction
+    {        
+        public static IEnumerable<string> ExtractFrom(IMetaMapProvider metaMapProvider)
         {
             var result = new List<string>();
-            foreach (var map in _rootMetaMaps)
+            foreach (var map in metaMapProvider.RootMetaMaps)
             {
                 var currentMap = map;
                 var currentAString = "";

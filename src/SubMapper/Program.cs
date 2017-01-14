@@ -58,10 +58,7 @@ namespace SubMapper
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);
-            var docs = mapping.GetDocumentation();
-
-            var metaMaps = mapping.MetaMaps;
-            var extract = new Metadata.SimpleStringMappingExtractor(metaMaps).Extract();
+            var extract = Metadata.SimpleStringExtraction.ExtractFrom(mapping);
 
             Console.WriteLine("==== MAPPING TESTS ====");
             Console.WriteLine($"testTarget.TargetString: {testTarget?.TargetString}");
@@ -77,8 +74,6 @@ namespace SubMapper
             Console.WriteLine($"testSource2.SourceSubs[0].NutrientAmount: {testSource2.SourceSubs.ElementAt(0).NutrientAmount}");
             Console.WriteLine($"testSource2.SourceInt: {testSource2.SourceInt}");
             Console.WriteLine("");
-            Console.WriteLine("==== DOC TESTS ====");
-            //Console.WriteLine(docs);
 
             Console.ReadKey();
         }
