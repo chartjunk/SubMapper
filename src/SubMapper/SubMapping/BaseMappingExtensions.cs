@@ -6,7 +6,7 @@ namespace SubMapper
 {
     public static partial class BaseMappingExtensions
     {
-        public static BaseMapping<TA, TB> WithSubMapping<TA, TB, TSubA, TSubB>(
+        public static BaseMapping<TA, TB> Sub<TA, TB, TSubA, TSubB>(
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, TSubB>> getSubBExpr,

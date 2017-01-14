@@ -11,10 +11,10 @@ namespace SubMapper.UnitTest
         public void MapUsingMultipleWhere()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .WithFromEnumerableMapping(s => s.Enumerable1, t => t, h => Mapping.Using(h)
-                    .WithArrayConcatAdder()
+                .FromEnum(s => s.Enumerable1, t => t, h => Mapping.Using(h)
+                    .UsingArrayConcatAdder()
                     .First(s => s.EnumerableInt1 == 1 && (s.EnumerableString1 == "Enumerable1 String1"))
-                    .WithSubMapping(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
+                    .Sub(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
                         .Map(s => s.EnumerableSubString1, t => t.String1)));
 
             var si = SourceType.GetTestInstance();

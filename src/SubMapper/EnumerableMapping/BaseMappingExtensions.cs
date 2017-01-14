@@ -8,7 +8,7 @@ namespace SubMapper
 {
     public static partial class BaseMappingExtensions
     {
-        public static BaseMapping<TA, TB> WithFromEnumerableMapping<TA, TB, TSubB, TSubAItem>(
+        public static BaseMapping<TA, TB> FromEnum<TA, TB, TSubB, TSubAItem>(
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAEnumExpr,
             Expression<Func<TB, TSubB>> getSubBExpr,
@@ -23,7 +23,7 @@ namespace SubMapper
             return source;
         }
 
-        public static BaseMapping<TA, TB> WithToEnumerableMapping<TA, TB, TSubA, TSubBItem>(
+        public static BaseMapping<TA, TB> ToEnum<TA, TB, TSubA, TSubBItem>(
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr,

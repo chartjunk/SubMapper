@@ -34,7 +34,7 @@ namespace SubMapper.UnitTest
         public void MapSubType()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .WithSubMapping(s => s.Sub1, t => t.Sub1, h => Mapping.Using(h)
+                .Sub(s => s.Sub1, t => t.Sub1, h => Mapping.Using(h)
                     .Map(s => s.SubString1, t => t.SubString1));
 
             var si = SourceType.GetTestInstance();
@@ -52,8 +52,8 @@ namespace SubMapper.UnitTest
         public void MapFromEnumerable()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .WithFromEnumerableMapping(s => s.Enumerable1, t => t, h => Mapping.Using(h)
-                    .WithAdder((c, s) => (c??new SourceType.SourceEnumerableType [] {  }).Concat(new [] {s}))
+                .FromEnum(s => s.Enumerable1, t => t, h => Mapping.Using(h)
+                    .UsingAdder((c, s) => (c??new SourceType.SourceEnumerableType [] {  }).Concat(new [] {s}))
                     .First(s => s.EnumerableInt1 == 1)
                     .Map(s => s.EnumerableString1, t => t.String1));
 
@@ -72,8 +72,8 @@ namespace SubMapper.UnitTest
         public void MapToEnumerable()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .WithToEnumerableMapping(s => s, t => t.Enumerable1, h => Mapping.Using(h)
-                    .WithAdder((c, t) => (c ?? new TargetType.TargetEnumerableType[] { }).Concat(new[] { t }))
+                .ToEnum(s => s, t => t.Enumerable1, h => Mapping.Using(h)
+                    .UsingAdder((c, t) => (c ?? new TargetType.TargetEnumerableType[] { }).Concat(new[] { t }))
                     .First(t => t.EnumerableInt1 == 1)
                     .Map(s => s.String1, t => t.EnumerableString1));
 
@@ -92,10 +92,10 @@ namespace SubMapper.UnitTest
         public void MapFromEnumerableSubType()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .WithFromEnumerableMapping(s => s.Enumerable1, t => t, h => Mapping.Using(h)
-                    .WithAdder((c, t) => (c ?? new SourceType.SourceEnumerableType[] { }).Concat(new[] { t }))
+                .FromEnum(s => s.Enumerable1, t => t, h => Mapping.Using(h)
+                    .UsingAdder((c, t) => (c ?? new SourceType.SourceEnumerableType[] { }).Concat(new[] { t }))
                     .First(t => t.EnumerableInt1 == 1)
-                    .WithSubMapping(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
+                    .Sub(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
                         .Map(s => s.EnumerableSubString1, t => t.String1)));
 
             var si = SourceType.GetTestInstance();

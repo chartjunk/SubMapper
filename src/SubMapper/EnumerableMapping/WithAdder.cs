@@ -12,7 +12,7 @@ namespace SubMapper.EnumerableMapping
     {
         private Func<TSubIEnum, TSubIItem, TSubIEnum> _getSubIEnumWithAddedSubIItem;
 
-        public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> WithAdder(Func<TSubIEnum, TSubIItem, TSubIEnum> getEnumerableWithAddedItem)
+        public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> UsingAdder(Func<TSubIEnum, TSubIItem, TSubIEnum> getEnumerableWithAddedItem)
         {
             _getSubIEnumWithAddedSubIItem = getEnumerableWithAddedItem;
             return this;
