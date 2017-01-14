@@ -41,7 +41,7 @@ namespace SubMapper.Metadata
                     else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.PartialEnumerableMappingMetadata)))
                     {
                         var m = ((EnumerableMapping.PartialEnumerableMappingMetadata)currentMap.Metadata);
-                        if (m.IsRotated)
+                        if (m.MappingViewType == MappingViewType.JisAandIisB)
                         {
                             currentBString += "." + m.IEnumPropertyInfo.Name + "[]";
                             if (m.IsJAndSubJDifferent)

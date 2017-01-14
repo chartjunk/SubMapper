@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SubMapper.EnumerableMapping.Where
 {
     public class MapWhereExpressionVisitor : ExpressionVisitor
     {
-        public List<Tuple<string, object>> WhereEqualsKeyValues { get; private set; } = new List<Tuple<string, object>>();
+        public List<Tuple<PropertyInfo, object>> WhereEqualsKeyValues { get; private set; } = new List<Tuple<PropertyInfo, object>>();
 
         public override Expression Visit(Expression node)
         {
@@ -39,7 +40,7 @@ namespace SubMapper.EnumerableMapping.Where
                     else throw new NotImplementedException();
 
                     WhereEqualsKeyValues.Add(Tuple.Create(
-                        memberExpression.Member.Name,
+                        memberExpression.Member as PropertyInfo,
                         constantExpression.Value));
 
                     break;

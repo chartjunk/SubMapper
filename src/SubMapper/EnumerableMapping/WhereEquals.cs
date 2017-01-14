@@ -18,8 +18,8 @@ namespace SubMapper.EnumerableMapping
         private class WhereMatchesContainer
         {
             public Func<IEnumerable<TSubIItem>, IEnumerable<TSubIItem>> GetSubIItemsFromSubIEnumWhereMatches { get; internal set; }
-            public string ValuePropertyName { get; set; }
-            public object ValuePropertyValue { get; set; }
+            public PropertyInfo PropertyInfo { get; set; }
+            public object EqualValue { get; set; }
         }
 
         public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> First(
@@ -29,11 +29,11 @@ namespace SubMapper.EnumerableMapping
             expressionVisitor.Visit(equalsExpression);
             expressionVisitor.WhereEqualsKeyValues.ForEach(i => _whereMatchess.Add(new WhereMatchesContainer
             {
-                ValuePropertyName = i.Item1,
-                ValuePropertyValue = i.Item2,
+                PropertyInfo = i.Item1,
+                EqualValue = i.Item2,
                 GetSubIItemsFromSubIEnumWhereMatches = new Func<IEnumerable<TSubIItem>, IEnumerable<TSubIItem>>(subIEnum =>
                     subIEnum != null
-                    ? subIEnum.Where(j => typeof(TSubIItem).GetProperty(i.Item1).GetValue(j).Equals(i.Item2))
+                    ? subIEnum.Where(j => i.Item1.GetValue(j).Equals(i.Item2))
                     : default(IEnumerable<TSubIItem>))
             }));
             return this;

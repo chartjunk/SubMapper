@@ -29,7 +29,7 @@ namespace SubMapper.EnumerableMapping
             {
                 HalfSubMapPair = new HalfSubMapPair
                 {
-                    SubMapViewType = IsRotated ? SubMapViewType.JisAandIisB : SubMapViewType.IisAandJisB,
+                    SubMapViewType = IsRotated ? MappingViewType.JisAandIisB : MappingViewType.IisAandJisB,
 
                     IHalfSubMap = new HalfSubMap
                     {
@@ -37,8 +37,6 @@ namespace SubMapper.EnumerableMapping
                         {
                             var subIEnum = subIEnumInfo.Getter(ni);
                             if (subIEnum == null) return null;
-                            // TODO: make WhereMatchesContainer consume objets instead of derived types
-                            //var subIItem = _whereMatchess.Select(w => w.GetSubIItemsFromSubIEnumWhereMatches).Aggregate((g1, g2) => e => g1(g2((TSubIEnum)subIEnum))); //.First().GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum);
                             var subIItem = _whereMatchess
                                     .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
                                     .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)subIEnum)
@@ -50,10 +48,6 @@ namespace SubMapper.EnumerableMapping
                         {
                             if (v == null) return;
                             var subIEnum = subIEnumInfo.Getter(ni);
-
-                            // TODO: allow multiple
-                            //var whereMatches = _whereMatchess.First();
-                            //var subIItem = subIEnum != null ? (object)whereMatches.GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum) : null;
                             var subIItem = subIEnum != null
                             ? (object)_whereMatchess
                                     .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
@@ -64,8 +58,7 @@ namespace SubMapper.EnumerableMapping
                             if (subIItem == null)
                             {
                                 subIItem = new TSubIItem();
-                                //typeof(TSubIItem).GetMapPropertyInfo(whereMatches.ValuePropertyName).Setter(subIItem, whereMatches.ValuePropertyValue);
-                                _whereMatchess.ForEach(w => typeof(TSubIItem).GetMapPropertyInfo(w.ValuePropertyName).Setter(subIItem, w.ValuePropertyValue));
+                                _whereMatchess.ForEach(w => w.PropertyInfo.SetValue(subIItem, w.EqualValue));
                                 subIEnum = _getSubIEnumWithAddedSubIItem((TSubIEnum)subIEnum, (TSubIItem)subIItem);
                                 subIEnumInfo.Setter(ni, subIEnum);
                             }
@@ -98,8 +91,6 @@ namespace SubMapper.EnumerableMapping
                     MetadataType = typeof(PartialEnumerableMappingMetadata),
                     Metadata = new PartialEnumerableMappingMetadata
                     {
-                        // TODO: WHERE infos
-
                         IEnumPropertyInfo = subIEnumPropertyInfo,
                         SubIEnumPropertyInfo = prevSubMap.HalfSubMapPair.IHalfSubMap.PropertyInfo,
 
@@ -107,7 +98,13 @@ namespace SubMapper.EnumerableMapping
                         SubJPropertyInfo = prevSubMap.HalfSubMapPair.JHalfSubMap.PropertyInfo,
                         IsJAndSubJDifferent = subJPropertyInfo.Name != prevSubMap.HalfSubMapPair.JHalfSubMap.PropertyInfo.Name,
 
-                        IsRotated = IsRotated
+                        WhereEquals = _whereMatchess.Select(m => new PartialEnumerableMappingWhereEqualsMetadata
+                        {
+                            PropertyInfo = m.PropertyInfo,
+                            EqualValue = m.EqualValue
+                        }),
+
+                        MappingViewType = IsRotated ? MappingViewType.JisAandIisB : MappingViewType.IisAandJisB
                     },
 
                     SubMetaMap = prevSubMap.MetaMap.Value

@@ -12,22 +12,22 @@ namespace SubMapper
         public PropertyInfo PropertyInfo { get; set; }
     }
 
-    public enum SubMapViewType { IisAandJisB, JisAandIisB }
+    public enum MappingViewType { IisAandJisB, JisAandIisB }
 
     public class HalfSubMapPair
     {
-        public SubMapViewType SubMapViewType { get; set; } = SubMapViewType.IisAandJisB;
+        public MappingViewType SubMapViewType { get; set; } = MappingViewType.IisAandJisB;
 
         public HalfSubMap IHalfSubMap
         {
-            get { return SubMapViewType == SubMapViewType.IisAandJisB ? AHalfSubMap : BHalfSubMap; }
-            set { if (SubMapViewType == SubMapViewType.IisAandJisB) AHalfSubMap = value; else BHalfSubMap = value; }
+            get { return SubMapViewType == MappingViewType.IisAandJisB ? AHalfSubMap : BHalfSubMap; }
+            set { if (SubMapViewType == MappingViewType.IisAandJisB) AHalfSubMap = value; else BHalfSubMap = value; }
         }
 
         public HalfSubMap JHalfSubMap
         {
-            get { return SubMapViewType == SubMapViewType.IisAandJisB ? BHalfSubMap : AHalfSubMap; }
-            set { if (SubMapViewType == SubMapViewType.IisAandJisB) BHalfSubMap = value; else AHalfSubMap = value; }
+            get { return SubMapViewType == MappingViewType.IisAandJisB ? BHalfSubMap : AHalfSubMap; }
+            set { if (SubMapViewType == MappingViewType.IisAandJisB) BHalfSubMap = value; else AHalfSubMap = value; }
         }
 
         public HalfSubMap AHalfSubMap { get; set; }
@@ -40,9 +40,9 @@ namespace SubMapper
         public Lazy<MetaMap> MetaMap { get; set; }
         public static SubMap Reverse(SubMap subMap)
         {
-            if (subMap.HalfSubMapPair.SubMapViewType == SubMapViewType.IisAandJisB)
-                subMap.HalfSubMapPair.SubMapViewType = SubMapViewType.JisAandIisB;
-            else subMap.HalfSubMapPair.SubMapViewType = SubMapViewType.IisAandJisB;
+            if (subMap.HalfSubMapPair.SubMapViewType == MappingViewType.IisAandJisB)
+                subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
+            else subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
             return subMap;
         }
     }
@@ -53,13 +53,13 @@ namespace SubMapper
 
         protected static SubMap GetAToBIToJFrom(SubMap subMap)
         {
-            subMap.HalfSubMapPair.SubMapViewType = SubMapViewType.IisAandJisB;
+            subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
             return subMap;
         }
 
         protected static SubMap GetBToAIToJFrom(SubMap subMap)
         {
-            subMap.HalfSubMapPair.SubMapViewType = SubMapViewType.JisAandIisB;
+            subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
             return subMap;
         }
     }
