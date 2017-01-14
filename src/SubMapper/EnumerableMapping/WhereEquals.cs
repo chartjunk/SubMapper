@@ -17,7 +17,7 @@ namespace SubMapper.EnumerableMapping
 
         private class WhereMatchesContainer
         {
-            public Func<TSubIEnum, TSubIItem> GetFirstSubAItemFromSubAEnumWhereMatches { get; internal set; }
+            public Func<IEnumerable<TSubIItem>, IEnumerable<TSubIItem>> GetSubIItemsFromSubIEnumWhereMatches { get; internal set; }
             public string ValuePropertyName { get; set; }
             public object ValuePropertyValue { get; set; }
         }
@@ -25,18 +25,16 @@ namespace SubMapper.EnumerableMapping
         public PartialEnumerableMapping<TSubA, TSubB, TSubIEnum, TSubJ, TSubIItem> First(
             Expression<Func<TSubIItem, bool>> equalsExpression)
         {
-            var subIItemValuePropertyInfo = ((((equalsExpression as LambdaExpression).Body as BinaryExpression).Left as MemberExpression).Member as PropertyInfo);
-            var getter = new Func<object, object>(p => subIItemValuePropertyInfo.GetValue(p));
             var expressionVisitor = new MapWhereExpressionVisitor();
             expressionVisitor.Visit(equalsExpression);
             expressionVisitor.WhereEqualsKeyValues.ForEach(i => _whereMatchess.Add(new WhereMatchesContainer
             {
                 ValuePropertyName = i.Item1,
                 ValuePropertyValue = i.Item2,
-                GetFirstSubAItemFromSubAEnumWhereMatches = new Func<TSubIEnum, TSubIItem>(subIEnum =>
+                GetSubIItemsFromSubIEnumWhereMatches = new Func<IEnumerable<TSubIItem>, IEnumerable<TSubIItem>>(subIEnum =>
                     subIEnum != null
-                    ? subIEnum.FirstOrDefault(j => getter(j).Equals(i.Item2))
-                    : default(TSubIItem))
+                    ? subIEnum.Where(j => typeof(TSubIItem).GetProperty(i.Item1).GetValue(j).Equals(i.Item2))
+                    : default(IEnumerable<TSubIItem>))
             }));
             return this;
         }

@@ -38,7 +38,11 @@ namespace SubMapper.EnumerableMapping
                             var subIEnum = subIEnumInfo.Getter(ni);
                             if (subIEnum == null) return null;
                             // TODO: make WhereMatchesContainer consume objets instead of derived types
-                            var subIItem = _whereMatchess.First().GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum);
+                            //var subIItem = _whereMatchess.Select(w => w.GetSubIItemsFromSubIEnumWhereMatches).Aggregate((g1, g2) => e => g1(g2((TSubIEnum)subIEnum))); //.First().GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum);
+                            var subIItem = _whereMatchess
+                                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                                    .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)subIEnum)
+                                    .FirstOrDefault();
                             if (subIItem == null) return null;
                             return prevSubMap.HalfSubMapPair.IHalfSubMap.GetSubFrom(subIItem);
                         },
@@ -48,12 +52,20 @@ namespace SubMapper.EnumerableMapping
                             var subIEnum = subIEnumInfo.Getter(ni);
 
                             // TODO: allow multiple
-                            var whereMatches = _whereMatchess.First();
-                            var subIItem = subIEnum != null ? (object)whereMatches.GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum) : null;
+                            //var whereMatches = _whereMatchess.First();
+                            //var subIItem = subIEnum != null ? (object)whereMatches.GetFirstSubAItemFromSubAEnumWhereMatches((TSubIEnum)subIEnum) : null;
+                            var subIItem = subIEnum != null
+                            ? (object)_whereMatchess
+                                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                                    .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)subIEnum)
+                                    .FirstOrDefault()
+                            : null;
+
                             if (subIItem == null)
                             {
                                 subIItem = new TSubIItem();
-                                typeof(TSubIItem).GetMapPropertyInfo(whereMatches.ValuePropertyName).Setter(subIItem, whereMatches.ValuePropertyValue);
+                                //typeof(TSubIItem).GetMapPropertyInfo(whereMatches.ValuePropertyName).Setter(subIItem, whereMatches.ValuePropertyValue);
+                                _whereMatchess.ForEach(w => typeof(TSubIItem).GetMapPropertyInfo(w.ValuePropertyName).Setter(subIItem, w.ValuePropertyValue));
                                 subIEnum = _getSubIEnumWithAddedSubIItem((TSubIEnum)subIEnum, (TSubIItem)subIItem);
                                 subIEnumInfo.Setter(ni, subIEnum);
                             }
