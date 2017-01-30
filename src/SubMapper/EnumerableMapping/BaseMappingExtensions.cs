@@ -12,12 +12,12 @@ namespace SubMapper
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAEnumExpr,
             Expression<Func<TB, TSubB>> getSubBExpr,
-            Func<FromEnumerableMappingHandle<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>, BaseMapping<TSubAItem, TSubB>> getInnerBaseMapping)            
+            Func<FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>, BaseMapping<TSubAItem, TSubB>> getInnerBaseMapping)            
             where TSubAItem : new()
             where TSubB : new()
         {
-            var innerBaseMapping = getInnerBaseMapping(new FromEnumerableMappingHandle<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>());
-            var fromEnumerableMapping = innerBaseMapping.Extensibility.DerivedMapping as FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>;
+            var fromEnumerableMapping = new FromEnumerableMapping<TA, TB, IEnumerable<TSubAItem>, TSubB, TSubAItem>();
+            var innerBaseMapping = getInnerBaseMapping(fromEnumerableMapping);
             var fullSubMaps = fromEnumerableMapping.GetSubMapsWithAddedPath(getSubAEnumExpr, getSubBExpr);
             source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
@@ -27,13 +27,13 @@ namespace SubMapper
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr,
-            Func<ToEnumerableMappingHandle<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>, BaseMapping<TSubA, TSubBItem>> getInnerBaseMapping)
+            Func<ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>, BaseMapping<TSubA, TSubBItem>> getInnerBaseMapping)
             where TSubA : new()
             where TSubBItem : new()
         {
-            var innerBaseMapping = getInnerBaseMapping(new ToEnumerableMappingHandle<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>());
-            var fromEnumerableMapping = innerBaseMapping.Extensibility.DerivedMapping as ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>;
-            var fullSubMaps = fromEnumerableMapping.GetSubMapsWithAddedPath(getSubAExpr, getSubBEnumExpr);
+            var toEnumerableMapping = new ToEnumerableMapping<TA, TB, TSubA, IEnumerable<TSubBItem>, TSubBItem>();
+            var innerBaseMapping = getInnerBaseMapping(toEnumerableMapping);
+            var fullSubMaps = toEnumerableMapping.GetSubMapsWithAddedPath(getSubAExpr, getSubBEnumExpr);
             source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
         }

@@ -13,8 +13,7 @@ namespace SubMapper.EnumerableMapping
     {
         public FromEnumerableMapping()
         {
-            IsRotated = false;
-            Extensibility.DerivedMapping = this;            
+            IsRotated = false;            
         }
 
         public List<SubMap> GetSubMapsWithAddedPath(

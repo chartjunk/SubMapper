@@ -12,8 +12,7 @@ namespace SubMapper.SubMapping
         where TSubB : new()
     {
         public SubMapping()
-        {
-            Extensibility.DerivedMapping = this;
+        {            
         }
 
         public List<SubMap> GetSubMapsWithAddedPath(

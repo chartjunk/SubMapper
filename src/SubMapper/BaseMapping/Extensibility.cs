@@ -17,7 +17,6 @@ namespace SubMapper
                 _baseMapping = baseMapping;
             }
 
-            public object DerivedMapping { get; set; }
             public List<SubMap> SubMaps { get { return _baseMapping._subMaps; } set { _baseMapping._subMaps = value; } }
         }
     }

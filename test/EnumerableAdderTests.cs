@@ -11,10 +11,10 @@ namespace SubMapper.UnitTest
         public void MapWithArrayConcatAdder()
         {
             var mapping = Mapping.FromTo<SourceType, TargetType>()
-                .FromEnum(s => s.Enumerable1, t => t, h => Mapping.Using(h)
+                .FromEnum(s => s.Enumerable1, t => t, fromEnumMapping => fromEnumMapping
                     .UsingArrayConcatAdder()
                     .First(t => t.EnumerableInt1 == 1)
-                    .Sub(s => s.EnumerableSub1, t => t, h2 => Mapping.Using(h2)
+                    .Sub(s => s.EnumerableSub1, t => t, subMapping => subMapping
                         .Map(s => s.EnumerableSubString1, t => t.String1)));
 
             var si = SourceType.GetTestInstance();

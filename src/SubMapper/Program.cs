@@ -41,18 +41,18 @@ namespace SubMapper
 
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .Map(a => a.SourceString, b => b.TargetString)
-                .Sub(a => a.SourceSub, b => b, h => Mapping.Using(h)
-                    .Sub(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
+                .Sub(a => a.SourceSub, b => b, subMapping => subMapping
+                    .Sub(a => a.SourceSubSub, b => b, subMapping2 => subMapping2
                         .Map(a => a.SourceString2, b => b.TargetString2)
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
 
-                .FromEnum(a => a.SourceSubs, b => b, h => Mapping.Using(h).UsingArrayConcatAdder()
+                .FromEnum(a => a.SourceSubs, b => b, fromEnumMapping => fromEnumMapping.UsingArrayConcatAdder()
                     .First(a => a.NutrientKey == "NN" && a.NutrientAmount == 69)
                     .Map(a => a.NutrientAmount, b => b.TargetInt)
-                    .Sub(a => a.SourceSubSub, b => b, h2 => Mapping.Using(h2)
+                    .Sub(a => a.SourceSubSub, b => b, subMapping => subMapping
                         .Map(a => a.SourceString2, b => b.TargetString3)))
 
-                .ToEnum(a => a, b => b.TargetSubs, h => Mapping.Using(h).UsingArrayConcatAdder()
+                .ToEnum(a => a, b => b.TargetSubs, toEnumMapping => toEnumMapping.UsingArrayConcatAdder()
                     .First(b => b.NutrientKey == "JJ")
                     .Map(a => a.SourceInt, b => b.NutrientAmount));
 
