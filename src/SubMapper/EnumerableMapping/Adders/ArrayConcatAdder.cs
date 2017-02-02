@@ -20,9 +20,9 @@ namespace SubMapper.EnumerableMapping.Adders
             return source;
         }
 
-        public static EnumerableMapping<TSubA, TSubB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>
+        public static EnumerablesMapping<TSubA, TSubB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>
             UsingArrayConcatAdder<TSubA, TSubB, TSubAItem, TSubBItem>(
-            this EnumerableMapping<TSubA, TSubB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem> source)
+            this EnumerablesMapping<TSubA, TSubB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem> source)
             where TSubAItem : new()
             where TSubBItem : new()
         {

@@ -42,11 +42,11 @@ namespace SubMapper
             this BaseMapping<TA, TB> source,
             Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAEnumExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr,
-            Func<EnumerableMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>, BaseMapping<TSubAItem, TSubBItem>> getInnerBaseMapping)
+            Func<EnumerablesMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>, BaseMapping<TSubAItem, TSubBItem>> getInnerBaseMapping)
             where TSubAItem : new()
             where TSubBItem : new()
         {
-            var enumerablesMapping = new EnumerableMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>();
+            var enumerablesMapping = new EnumerablesMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>();
             var innerBaseMapping = getInnerBaseMapping(enumerablesMapping);
             var fullSubMaps = enumerablesMapping.GetSubMapsWithAddedPath(getSubAEnumExpr, getSubBEnumExpr);
             source.Extensibility.SubMaps.AddRange(fullSubMaps);

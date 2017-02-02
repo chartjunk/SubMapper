@@ -50,7 +50,7 @@
     <Compile Include="BaseMapping\Map.cs" />
     <Compile Include="BaseMapping\SubMap.cs" />
     <Compile Include="BaseMapping\Translate.cs" />
-    <Compile Include="EnumerableMapping\EnumerableMapping.cs" />
+    <Compile Include="EnumerableMapping\EnumerablesMapping.cs" />
     <Compile Include="EnumerableMapping\PartialEnumerableMappingMetadata.cs" />
     <Compile Include="EnumerableMapping\Where\MapWhereExpressionVisitor.cs" />
     <Compile Include="EnumerableMapping\WithAdder.cs" />

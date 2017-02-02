@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SubMapper.EnumerableMapping
 {
-    public partial class EnumerableMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem>
+    public partial class EnumerablesMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem>
         : BaseMapping<TSubAItem, TSubBItem>
         where TSubAEnum : IEnumerable<TSubAItem>
         where TSubBEnum : IEnumerable<TSubBItem>
@@ -17,7 +17,7 @@ namespace SubMapper.EnumerableMapping
         private Func<TSubAEnum, TSubAItem, TSubAEnum> _getSubAEnumWithAddedSubAItem;
         private Func<TSubBEnum, TSubBItem, TSubBEnum> _getSubBEnumWithAddedSubBItem;
 
-        public EnumerableMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem> UsingAdder(
+        public EnumerablesMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem> UsingAdder(
             Func<TSubAEnum, TSubAItem, TSubAEnum> getAEnumWithAddedAItem,
             Func<TSubBEnum, TSubBItem, TSubBEnum> getBEnumWithAddedBItem)
         {
