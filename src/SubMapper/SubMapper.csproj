@@ -50,6 +50,7 @@
     <Compile Include="BaseMapping\Map.cs" />
     <Compile Include="BaseMapping\SubMap.cs" />
     <Compile Include="BaseMapping\Translate.cs" />
+    <Compile Include="EnumerableMapping\EnumerableMapping.cs" />
     <Compile Include="EnumerableMapping\PartialEnumerableMappingMetadata.cs" />
     <Compile Include="EnumerableMapping\Where\MapWhereExpressionVisitor.cs" />
     <Compile Include="EnumerableMapping\WithAdder.cs" />
@@ -59,7 +60,7 @@
     <Compile Include="EnumerableMapping\Handle.cs" />
     <Compile Include="EnumerableMapping\PartialEnumerableMapping.cs" />
     <Compile Include="EnumerableMapping\ToEnumerableMapping.cs" />
-    <Compile Include="EnumerableMapping\WhereEquals.cs" />
+    <Compile Include="EnumerableMapping\WhereMatches.cs" />
     <Compile Include="Mapping.cs" />
     <Compile Include="Metadata\IMetaMapProvider.cs" />
     <Compile Include="Metadata\SimpleStringExtraction.cs" />

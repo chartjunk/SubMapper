@@ -19,6 +19,12 @@ namespace SubMapper
         public int SourceInt2 { get; set; }
     }
 
+    class SourceEnumType
+    {
+        public int SourceEnumInt { get; set; }
+        public string SourceEnumString { get; set; }
+    }
+
     class SourceType
     {
         public int SourceInt { get; set; }
@@ -26,5 +32,6 @@ namespace SubMapper
         public DateTime? SourceDateTime { get; set; }
         public SourceSubType SourceSub { get; set; }
         public IEnumerable<SourceSubType> SourceSubs { get; set; }
+        public IEnumerable<SourceEnumType> SourceEnum { get; set; }
     }
 }

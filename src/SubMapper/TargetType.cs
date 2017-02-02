@@ -12,6 +12,12 @@ namespace SubMapper
         public int NutrientAmount { get; set; }
     }
 
+    class TargetEnumType
+    {
+        public int TargetEnumInt { get; set; }
+        public string TargetEnumString { get; set; }
+    }
+
     class TargetType
     {
         public int TargetInt { get; set; }
@@ -21,5 +27,6 @@ namespace SubMapper
         public int TargetInt2 { get; set; }
         public TargetSubType[] TargetSubs { get; set; }
         public string TargetString3 { get; set; }
+        public IEnumerable<TargetEnumType> TargetEnum { get; set; }
     }
 }

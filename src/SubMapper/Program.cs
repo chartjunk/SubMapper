@@ -33,28 +33,44 @@ namespace SubMapper
                         }
                     }
                 },
-                SourceInt = 911
+                SourceInt = 911,
+                SourceEnum = new []
+                {
+                    new SourceEnumType
+                    {
+                        SourceEnumInt = 5,
+                        SourceEnumString = "123a"
+                    }
+                }
             };
 
             var testTarget = new TargetType();
-            var testSource2 = new SourceType();        
+            var testSource2 = new SourceType();
 
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .Map(a => a.SourceString, b => b.TargetString)
-                .Sub(a => a.SourceSub, b => b, subMapping => subMapping
-                    .Sub(a => a.SourceSubSub, b => b, subMapping2 => subMapping2
+                .Sub(a => a.SourceSub, b => b, sM => sM
+                    .Sub(a => a.SourceSubSub, b => b, sM2 => sM2
                         .Map(a => a.SourceString2, b => b.TargetString2)
                         .Map(a => a.SourceInt2, b => b.TargetInt2)))
 
-                .FromEnum(a => a.SourceSubs, b => b, fromEnumMapping => fromEnumMapping.UsingArrayConcatAdder()
+                .FromEnum(a => a.SourceSubs, b => b, eM => eM.UsingArrayConcatAdder()
                     .First(a => a.NutrientKey == "NN" && a.NutrientAmount == 69)
                     .Map(a => a.NutrientAmount, b => b.TargetInt)
-                    .Sub(a => a.SourceSubSub, b => b, subMapping => subMapping
+                    .Sub(a => a.SourceSubSub, b => b, sM => sM
                         .Map(a => a.SourceString2, b => b.TargetString3)))
 
-                .ToEnum(a => a, b => b.TargetSubs, toEnumMapping => toEnumMapping.UsingArrayConcatAdder()
+                .ToEnum(a => a, b => b.TargetSubs, eM => eM.UsingArrayConcatAdder()
                     .First(b => b.NutrientKey == "JJ")
-                    .Map(a => a.SourceInt, b => b.NutrientAmount));
+                    .Map(a => a.SourceInt, b => b.NutrientAmount))
+
+                //.Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
+                //    .First(a => a.SourceEnumString == "a", b => b.TargetEnumString == "b")
+                //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt))
+                    
+                .Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
+                    .Map(a => a.SourceEnumString, b => b.TargetEnumString)
+                    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);
