@@ -43,11 +43,12 @@ namespace SubMapper.EnumerableMapping
                         GetSubFrom = na =>
                         {
                             var subAEnum = subAEnumInfo.Getter(na);
-                            if (subAEnum == null) return null;
-                            var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
-                            if (subAItem == null) return null;
+                            return subAEnum;
+                            //if (subAEnum == null) return null;
+                            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
+                            //if (subAItem == null) return null;
 
-                            return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
+                            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
                         },
                         SetSubFrom = (na, v) =>
                         {
@@ -79,17 +80,31 @@ namespace SubMapper.EnumerableMapping
                         SetSubFrom = (nb, v) =>
                         {
                             if (v == null) return;
-                            var subBEnum = subBEnumInfo.Getter(nb);
-                            var subBItem = subBEnum != null ? (object)((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault() : null;
+                            var subAEnum = ((IEnumerable<TSubAItem>)v);
+                            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
 
-                            if (subBItem == null)
+                            if (subBEnum == null)
+                                subBEnum = new List<TSubBItem>();
+
+                            for(int i = 0; i < subAEnum.Count(); ++i)
                             {
-                                subBItem = new TSubBItem();
-                                subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, (TSubBItem)subBItem);
-                                subBEnumInfo.Setter(nb, subBEnum);
+                                TSubBItem subBItem;
+                                // If equivalent child does not exist, create
+                                if (subBEnum.Count() <= i)
+                                {
+                                    subBItem = new TSubBItem();
+                                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
+                                }
+                                else
+                                    subBItem = subBEnum.ElementAt(i);
+
+                                // Set value for each child
+                                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
+                                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
                             }
 
-                            prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, v);
+                            // Connect enumerable to its parent
+                            subBEnumInfo.Setter(nb, subBEnum);
                         }
                     }
                 }

@@ -39,7 +39,12 @@ namespace SubMapper
                     new SourceEnumType
                     {
                         SourceEnumInt = 5,
-                        SourceEnumString = "123a"
+                        SourceEnumString = "viitonen"
+                    },
+                    new SourceEnumType
+                    {
+                        SourceEnumInt = 6,
+                        SourceEnumString = "kuutonen"
                     }
                 }
             };
