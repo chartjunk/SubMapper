@@ -15,7 +15,8 @@ namespace SubMapper
         {
             foreach (var k in IToJSubMaps)
             {
-                k.HalfSubMapPair.JHalfSubMap.SetSubFrom(J, k.HalfSubMapPair.IHalfSubMap.GetSubFrom(I));
+                k.GetISetJ(I, J);
+                //k.HalfSubMapPair.JHalfSubMap.SetSubFrom(J, k.HalfSubMapPair.IHalfSubMap.GetSubFrom(I));
             }
         }
     }

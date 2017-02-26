@@ -72,7 +72,7 @@ namespace SubMapper
                 //.Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
                 //    .First(a => a.SourceEnumString == "a", b => b.TargetEnumString == "b")
                 //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt))
-                    
+
                 .Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
                     .Map(a => a.SourceEnumString, b => b.TargetEnumString)
                     .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));

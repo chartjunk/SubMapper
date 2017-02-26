@@ -36,14 +36,34 @@ namespace SubMapper
 
     public partial class SubMap
     {
-        public HalfSubMapPair HalfSubMapPair { get; set; }
+        /// <summary>
+        /// TODO: remove
+        /// </summary>
+        //public HalfSubMapPair HalfSubMapPair { get; set; }
+        public Action<object, object> GetASetB { get; set; }
+        public Action<object, object> GetBSetA { get; set; }
+        public void GetISetJ(object i, object j)
+        {
+            if (MappingViewType == MappingViewType.IisAandJisB)
+                GetASetB(i, j);
+            else
+                GetBSetA(i, j);
+        }
+        public MappingViewType MappingViewType { get; set; }
+
         public Lazy<MetaMap> MetaMap { get; set; }
+
         public static SubMap Reverse(SubMap subMap)
         {
-            if (subMap.HalfSubMapPair.SubMapViewType == MappingViewType.IisAandJisB)
-                subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
-            else subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
+            if (subMap.MappingViewType == MappingViewType.IisAandJisB)
+                subMap.MappingViewType = MappingViewType.JisAandIisB;
+            else subMap.MappingViewType = MappingViewType.IisAandJisB;
             return subMap;
+
+            //if (subMap.HalfSubMapPair.SubMapViewType == MappingViewType.IisAandJisB)
+            //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
+            //else subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
+            //return subMap;
         }
     }
 
@@ -51,15 +71,27 @@ namespace SubMapper
     {
         protected List<SubMap> _subMaps { get; set; } = new List<SubMap>();
 
+        //protected static SubMap GetAToBIToJFrom(SubMap subMap)
+        //{
+        //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
+        //    return subMap;
+        //}
+
+        //protected static SubMap GetBToAIToJFrom(SubMap subMap)
+        //{
+        //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
+        //    return subMap;
+        //}
+
         protected static SubMap GetAToBIToJFrom(SubMap subMap)
         {
-            subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
+            subMap.MappingViewType = MappingViewType.IisAandJisB;
             return subMap;
         }
 
         protected static SubMap GetBToAIToJFrom(SubMap subMap)
         {
-            subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
+            subMap.MappingViewType = MappingViewType.JisAandIisB;
             return subMap;
         }
     }

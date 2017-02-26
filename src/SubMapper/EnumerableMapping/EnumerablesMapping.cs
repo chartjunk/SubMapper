@@ -34,80 +34,84 @@ namespace SubMapper.EnumerableMapping
             var subAEnumInfo = getSubAExpr.GetMapPropertyInfo();
             var subBEnumInfo = getSubBExpr.GetMapPropertyInfo();
 
+            throw new NotImplementedException();
+
             var result = new SubMap
             {
-                HalfSubMapPair = new HalfSubMapPair
-                {
-                    AHalfSubMap = new HalfSubMap
-                    {
-                        GetSubFrom = na =>
-                        {
-                            var subAEnum = subAEnumInfo.Getter(na);
-                            return subAEnum;
-                            //if (subAEnum == null) return null;
-                            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
-                            //if (subAItem == null) return null;
+                //HalfSubMapPair = new HalfSubMapPair
+                //{
+                //    // TODO: change v-argument semantically from "base value" to "source to target passer"
 
-                            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
-                        },
-                        SetSubFrom = (na, v) =>
-                        {
-                            if (v == null) return;
-                            var subAEnum = subAEnumInfo.Getter(na);
-                            var subAItem = subAEnum != null ? (object)((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault() : null;
+                //    AHalfSubMap = new HalfSubMap
+                //    {
+                //        GetSubFrom = na =>
+                //        {
+                //            var subAEnum = subAEnumInfo.Getter(na);
+                //            return subAEnum;
+                //            //if (subAEnum == null) return null;
+                //            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
+                //            //if (subAItem == null) return null;
 
-                            if (subAItem == null)
-                            {
-                                subAItem = new TSubAItem();
-                                subAEnum = _getSubAEnumWithAddedSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
-                                subAEnumInfo.Setter(na, subAEnum);
-                            }
+                //            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
+                //        },
+                //        SetSubFrom = (na, v) =>
+                //        {
+                //            if (v == null) return;
+                //            var subAEnum = subAEnumInfo.Getter(na);
+                //            var subAItem = subAEnum != null ? (object)((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault() : null;
 
-                            prevSubMap.HalfSubMapPair.AHalfSubMap.SetSubFrom(subAItem, v);
-                        }
-                    },
-                    BHalfSubMap = new HalfSubMap
-                    {
-                        GetSubFrom = nb =>
-                        {
-                            var subBEnum = subBEnumInfo.Getter(nb);
-                            if (subBEnum == null) return null;
-                            var subBItem = ((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault();
-                            if (subBItem == null) return null;
+                //            if (subAItem == null)
+                //            {
+                //                subAItem = new TSubAItem();
+                //                subAEnum = _getSubAEnumWithAddedSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
+                //                subAEnumInfo.Setter(na, subAEnum);
+                //            }
 
-                            return prevSubMap.HalfSubMapPair.BHalfSubMap.GetSubFrom(subBItem);
-                        },
-                        SetSubFrom = (nb, v) =>
-                        {
-                            if (v == null) return;
-                            var subAEnum = ((IEnumerable<TSubAItem>)v);
-                            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
+                //            prevSubMap.HalfSubMapPair.AHalfSubMap.SetSubFrom(subAItem, v);
+                //        }
+                //    },
+                //    BHalfSubMap = new HalfSubMap
+                //    {                        
+                //        GetSubFrom = nb =>
+                //        {
+                //            var subBEnum = subBEnumInfo.Getter(nb);
+                //            if (subBEnum == null) return null;
+                //            var subBItem = ((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault();
+                //            if (subBItem == null) return null;
 
-                            if (subBEnum == null)
-                                subBEnum = new List<TSubBItem>();
+                //            return prevSubMap.HalfSubMapPair.BHalfSubMap.GetSubFrom(subBItem);
+                //        },
+                //        SetSubFrom = (nb, v) =>
+                //        {
+                //            if (v == null) return;
+                //            var subAEnum = ((IEnumerable<TSubAItem>)v);
+                //            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
 
-                            for(int i = 0; i < subAEnum.Count(); ++i)
-                            {
-                                TSubBItem subBItem;
-                                // If equivalent child does not exist, create
-                                if (subBEnum.Count() <= i)
-                                {
-                                    subBItem = new TSubBItem();
-                                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
-                                }
-                                else
-                                    subBItem = subBEnum.ElementAt(i);
+                //            if (subBEnum == null)
+                //                subBEnum = new List<TSubBItem>();
 
-                                // Set value for each child
-                                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
-                                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
-                            }
+                //            for(int i = 0; i < subAEnum.Count(); ++i)
+                //            {
+                //                TSubBItem subBItem;
+                //                // If equivalent child does not exist, create
+                //                if (subBEnum.Count() <= i)
+                //                {
+                //                    subBItem = new TSubBItem();
+                //                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
+                //                }
+                //                else
+                //                    subBItem = subBEnum.ElementAt(i);
 
-                            // Connect enumerable to its parent
-                            subBEnumInfo.Setter(nb, subBEnum);
-                        }
-                    }
-                }
+                //                // Set value for each child
+                //                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
+                //                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
+                //            }
+
+                //            // Connect enumerable to its parent
+                //            subBEnumInfo.Setter(nb, subBEnum);
+                //        }
+                //    }
+                //}
             };
             return result;
         }
