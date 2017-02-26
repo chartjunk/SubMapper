@@ -41,6 +41,9 @@ namespace SubMapper
                     },
                     SubMetaMap = null
                 }),
+
+                APropertyInfo = subAInfo.PropertyInfo,
+                BPropertyInfo = subBInfo.PropertyInfo
             };
 
             _subMaps.Add(subMap);

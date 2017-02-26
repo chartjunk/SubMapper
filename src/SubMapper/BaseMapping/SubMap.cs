@@ -36,12 +36,12 @@ namespace SubMapper
 
     public partial class SubMap
     {
-        /// <summary>
-        /// TODO: remove
-        /// </summary>
-        //public HalfSubMapPair HalfSubMapPair { get; set; }
+        public HalfSubMapPair HalfSubMapPair { get; set; }
         public Action<object, object> GetASetB { get; set; }
         public Action<object, object> GetBSetA { get; set; }
+        public PropertyInfo APropertyInfo { get; set; }
+        public PropertyInfo BPropertyInfo { get; set; }
+
         public void GetISetJ(object i, object j)
         {
             if (MappingViewType == MappingViewType.IisAandJisB)
