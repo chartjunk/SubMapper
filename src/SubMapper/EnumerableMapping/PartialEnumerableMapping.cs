@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SubMapper.EnumerableMapping
 {
@@ -14,6 +15,77 @@ namespace SubMapper.EnumerableMapping
     {
         protected bool IsRotated { get; set; }
 
+        private void GetXEnumSetY(object nXEnum, object ny,
+            PropertyInfo xEnumPropertyInfo,
+            PropertyInfo yPropertyInfo,
+            PropertyInfo prevXPropertyInfo,
+            PropertyInfo prevYPropertyInfo,
+            Func<object> getNewY)
+        {
+            // Get x
+            if (nXEnum == null)
+                return;
+
+            var xEnum = xEnumPropertyInfo.GetValue(nXEnum);
+            if (xEnum == null)
+                return;
+
+            var x = _whereMatchess
+                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                    .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)xEnum)
+                    .FirstOrDefault();
+            if (x == null)
+                return;
+
+            var prevX = prevXPropertyInfo.GetValue(x);
+
+            // Set y
+            var y = yPropertyInfo != null ? yPropertyInfo.GetValue(ny) : ny; // may be j => j
+            if(y == null)
+            {
+                y = getNewY();
+                yPropertyInfo.SetValue(ny, y);
+            }
+
+            prevYPropertyInfo.SetValue(y, prevX);
+        }
+
+        private void GetXSetYEnum(object nx, object nYEnum,
+            PropertyInfo xPropertyInfo,
+            PropertyInfo yEnumPropertyInfo,
+            PropertyInfo prevXPropertyInfo,
+            PropertyInfo prevYPropertyInfo)
+        {
+            // Get x
+            if (nx == null)
+                return;
+
+            var x = xPropertyInfo != null ? xPropertyInfo.GetValue(nx) : nx; // may be i => i
+            if (x == null)
+                return;
+
+            var prevX = prevXPropertyInfo.GetValue(x);
+
+            // Set y
+            var yEnum = yEnumPropertyInfo.GetValue(nYEnum);
+            var y = yEnum != null
+            ? (object)_whereMatchess
+                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                    .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)yEnum)
+                    .FirstOrDefault()
+            : null;
+
+            if (y == null)
+            {
+                y = new TSubIItem();
+                _whereMatchess.ForEach(w => w.PropertyInfo.SetValue(y, w.EqualValue));
+                yEnum = _getSubIEnumWithAddedSubIItem((TSubIEnum)yEnum, (TSubIItem)y);
+                yEnumPropertyInfo.SetValue(nYEnum, yEnum);
+            }
+
+            prevYPropertyInfo.SetValue(y, prevX);
+        }
+
         protected SubMap MapFromEnumerableVia<TNonI, TNonJ>(
             SubMap prevSubMap,
             Expression<Func<TNonI, IEnumerable<TSubIItem>>> getSubIExpr,
@@ -22,10 +94,29 @@ namespace SubMapper.EnumerableMapping
             var subIEnumInfo = getSubIExpr.GetMapPropertyInfo();
             var subJInfo = getSubJExpr.GetMapPropertyInfo();
 
-            throw new NotImplementedException();
-
             var subIEnumPropertyInfo = subIEnumInfo.PropertyInfo;
-            //var subJPropertyInfo = subJInfo.PropertyInfo ?? prevSubMap.HalfSubMapPair.JHalfSubMap.PropertyInfo;
+            var subJPropertyInfo = subJInfo.PropertyInfo;
+            //var subJPropertyInfo = subJInfo.PropertyInfo ?? (IsRotated ? prevSubMap.APropertyInfo : prevSubMap.BPropertyInfo);
+
+            var result = new SubMap
+            {
+                GetASetB = (a, b) =>
+                {
+                    if (IsRotated)
+                        GetXSetYEnum(a, b, subJInfo.PropertyInfo, subIEnumPropertyInfo, prevSubMap.APropertyInfo, prevSubMap.BPropertyInfo);
+                    else
+                        GetXEnumSetY(a, b, subIEnumPropertyInfo, subJInfo.PropertyInfo, prevSubMap.APropertyInfo, prevSubMap.BPropertyInfo, () => new TSubJ());
+                },
+                GetBSetA = (a, b) =>
+                {
+                    if (IsRotated)
+                        GetXEnumSetY(a, b, subIEnumPropertyInfo, subJInfo.PropertyInfo, prevSubMap.BPropertyInfo, prevSubMap.APropertyInfo, () => new TSubJ());
+                    else
+                        GetXSetYEnum(a, b, subJInfo.PropertyInfo, subIEnumPropertyInfo, prevSubMap.BPropertyInfo, prevSubMap.APropertyInfo);
+                }
+            };
+
+            return result;
 
             //var result = new SubMap
             //{

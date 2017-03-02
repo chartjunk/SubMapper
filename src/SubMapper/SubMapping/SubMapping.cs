@@ -60,10 +60,10 @@ namespace SubMapper.SubMapping
             //TODO: refactor this kludge
             var aPropertyInfo = aInfo.PropertyInfo;
             if (aInfo.Setter == null)
-                aPropertyInfo = prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo;
+                aPropertyInfo = prevSubMap.APropertyInfo;
             var bPropertyInfo = bInfo.PropertyInfo;
             if (bInfo.Setter == null)
-                bPropertyInfo = prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo;
+                bPropertyInfo = prevSubMap.BPropertyInfo;
 
             var result = new SubMap
             {
