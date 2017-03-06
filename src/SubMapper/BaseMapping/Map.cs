@@ -28,6 +28,7 @@ namespace SubMapper
 
             var subMap = new SubMap
             {
+                IsBaseSubMap = true,
                 GetASetB = (a, b) => GetXSetY(a, b, subAInfo, subBInfo),
                 GetBSetA = (b, a) => GetXSetY(b, a, subBInfo, subAInfo),
 

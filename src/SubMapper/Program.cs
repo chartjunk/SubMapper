@@ -67,15 +67,15 @@ namespace SubMapper
 
                 .ToEnum(a => a, b => b.TargetSubs, eM => eM.UsingArrayConcatAdder()
                     .First(b => b.NutrientKey == "JJ")
-                    .Map(a => a.SourceInt, b => b.NutrientAmount))
+                    .Map(a => a.SourceInt, b => b.NutrientAmount));
 
                 //.Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
                 //    .First(a => a.SourceEnumString == "a", b => b.TargetEnumString == "b")
                 //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt))
 
-                .Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
-                    .Map(a => a.SourceEnumString, b => b.TargetEnumString)
-                    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));
+                //.Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
+                //    .Map(a => a.SourceEnumString, b => b.TargetEnumString)
+                //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);

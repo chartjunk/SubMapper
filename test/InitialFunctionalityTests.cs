@@ -94,7 +94,7 @@ namespace SubMapper.UnitTest
             var mapping = Mapping.FromTo<SourceType, TargetType>()
                 .FromEnum(s => s.Enumerable1, t => t, fromEnumMapping => fromEnumMapping
                     .UsingAdder((c, t) => (c ?? new SourceType.SourceEnumerableType[] { }).Concat(new[] { t }))
-                    .First(t => t.EnumerableInt1 == 1)
+                    .First(s => s.EnumerableInt1 == 1)
                     .Sub(s => s.EnumerableSub1, t => t, subMapping => subMapping
                         .Map(s => s.EnumerableSubString1, t => t.String1)));
 

@@ -5,50 +5,35 @@ using System.Reflection;
 
 namespace SubMapper
 {
-    public class HalfSubMap
-    {
-        public Func<object, object> GetSubFrom { get; set; }
-        public Action<object, object> SetSubFrom { get; set; }
-        public PropertyInfo PropertyInfo { get; set; }
-    }
-
     public enum MappingViewType { IisAandJisB, JisAandIisB }
-
-    public class HalfSubMapPair
-    {
-        public MappingViewType SubMapViewType { get; set; } = MappingViewType.IisAandJisB;
-
-        public HalfSubMap IHalfSubMap
-        {
-            get { return SubMapViewType == MappingViewType.IisAandJisB ? AHalfSubMap : BHalfSubMap; }
-            set { if (SubMapViewType == MappingViewType.IisAandJisB) AHalfSubMap = value; else BHalfSubMap = value; }
-        }
-
-        public HalfSubMap JHalfSubMap
-        {
-            get { return SubMapViewType == MappingViewType.IisAandJisB ? BHalfSubMap : AHalfSubMap; }
-            set { if (SubMapViewType == MappingViewType.IisAandJisB) BHalfSubMap = value; else AHalfSubMap = value; }
-        }
-
-        public HalfSubMap AHalfSubMap { get; set; }
-        public HalfSubMap BHalfSubMap { get; set; }
-    }
 
     public partial class SubMap
     {
-        public HalfSubMapPair HalfSubMapPair { get; set; }
         public Action<object, object> GetASetB { get; set; }
         public Action<object, object> GetBSetA { get; set; }
         public PropertyInfo APropertyInfo { get; set; }
         public PropertyInfo BPropertyInfo { get; set; }
+        public PropertyInfo IPropertyInfo
+        {
+            get { return MappingViewType == MappingViewType.IisAandJisB ? APropertyInfo : BPropertyInfo; }
+            set { if (MappingViewType == MappingViewType.IisAandJisB) APropertyInfo = value; else BPropertyInfo = value; }
+        }
+        public PropertyInfo JPropertyInfo
+        {
+            get { return MappingViewType == MappingViewType.IisAandJisB ? BPropertyInfo : APropertyInfo; }
+            set { if (MappingViewType == MappingViewType.IisAandJisB) BPropertyInfo = value; else APropertyInfo = value; }
+        }
 
-        public void GetISetJ(object i, object j)
+        public bool IsBaseSubMap { get; set; } = false;
+
+        public Action<object, object> GetISetJ => (i, j) =>
         {
             if (MappingViewType == MappingViewType.IisAandJisB)
                 GetASetB(i, j);
             else
                 GetBSetA(i, j);
-        }
+        };
+
         public MappingViewType MappingViewType { get; set; }
 
         public Lazy<MetaMap> MetaMap { get; set; }
@@ -59,29 +44,12 @@ namespace SubMapper
                 subMap.MappingViewType = MappingViewType.JisAandIisB;
             else subMap.MappingViewType = MappingViewType.IisAandJisB;
             return subMap;
-
-            //if (subMap.HalfSubMapPair.SubMapViewType == MappingViewType.IisAandJisB)
-            //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
-            //else subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
-            //return subMap;
         }
     }
 
     public partial class BaseMapping<TA, TB>
     {
         protected List<SubMap> _subMaps { get; set; } = new List<SubMap>();
-
-        //protected static SubMap GetAToBIToJFrom(SubMap subMap)
-        //{
-        //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.IisAandJisB;
-        //    return subMap;
-        //}
-
-        //protected static SubMap GetBToAIToJFrom(SubMap subMap)
-        //{
-        //    subMap.HalfSubMapPair.SubMapViewType = MappingViewType.JisAandIisB;
-        //    return subMap;
-        //}
 
         protected static SubMap GetAToBIToJFrom(SubMap subMap)
         {

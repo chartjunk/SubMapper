@@ -26,27 +26,34 @@ namespace SubMapper.SubMapping
             PropertyInfo yPropertyInfo, 
             PropertyInfo prevXPropertyInfo, 
             PropertyInfo prevYPropertyInfo,
+            Action<object, object> doPrevSubMapping,
             Func<object> GetNewY)
         {
             if (nx == null)
                 return;
 
-            var x = xPropertyInfo.GetValue(nx);
-            if (x == null)
-                return;
+            object x = null;
+            if (xPropertyInfo != null)
+                x = xPropertyInfo.GetValue(nx);
+            else
+                x = nx;
 
-            var prevX = prevXPropertyInfo.GetValue(x);
-            if (prevX == null)
-                return;
 
-            var y = yPropertyInfo.GetValue(ny);
+            var y = yPropertyInfo != null ? yPropertyInfo.GetValue(ny) : ny; // may be k => k
             if (y == null)
             {
                 y = GetNewY();
                 yPropertyInfo.SetValue(ny, y);
             }
 
-            prevYPropertyInfo.SetValue(y, prevX);
+            if (doPrevSubMapping == null)
+            {
+                x = prevXPropertyInfo.GetValue(x);
+                prevYPropertyInfo.SetValue(y, x);
+            }
+            else
+                doPrevSubMapping(x, y);
+
         }
 
         protected static SubMap MapVia<TNonA, TNonB>(
@@ -60,15 +67,15 @@ namespace SubMapper.SubMapping
             //TODO: refactor this kludge
             var aPropertyInfo = aInfo.PropertyInfo;
             if (aInfo.Setter == null)
-                aPropertyInfo = prevSubMap.APropertyInfo;
+                aPropertyInfo = prevSubMap.IPropertyInfo;
             var bPropertyInfo = bInfo.PropertyInfo;
             if (bInfo.Setter == null)
-                bPropertyInfo = prevSubMap.BPropertyInfo;
+                bPropertyInfo = prevSubMap.JPropertyInfo;
 
             var result = new SubMap
             {
-                GetASetB = (a, b) => GetXSetY(a, b, aPropertyInfo, bPropertyInfo, prevSubMap.APropertyInfo, prevSubMap.BPropertyInfo, () => new TSubB()),
-                GetBSetA = (b, a) => GetXSetY(b, a, bPropertyInfo, aPropertyInfo, prevSubMap.BPropertyInfo, prevSubMap.APropertyInfo, () => new TSubA()),
+                GetASetB = (a, b) => GetXSetY(a, b, aInfo.PropertyInfo, bInfo.PropertyInfo, prevSubMap.IPropertyInfo, prevSubMap.JPropertyInfo, prevSubMap.IsBaseSubMap ? null : prevSubMap.GetASetB, () => new TSubB()),
+                GetBSetA = (b, a) => GetXSetY(b, a, bInfo.PropertyInfo, aInfo.PropertyInfo, prevSubMap.JPropertyInfo, prevSubMap.IPropertyInfo, prevSubMap.IsBaseSubMap ? null : prevSubMap.GetBSetA, () => new TSubA()),
 
                 APropertyInfo = aPropertyInfo,
                 BPropertyInfo = bPropertyInfo,
@@ -79,12 +86,12 @@ namespace SubMapper.SubMapping
                     Metadata = new SubMappingMetadata
                     {
                         APropertyInfo = aPropertyInfo,
-                        SubAPropertyInfo = prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo,
-                        IsAAndSubADifferent = aPropertyInfo.Name != prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo.Name, // TODO
+                        //SubAPropertyInfo = prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo,
+                        //IsAAndSubADifferent = aPropertyInfo.Name != prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo.Name, // TODO
 
                         BPropertyInfo = bPropertyInfo,
-                        SubBPropertyInfo = prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo,
-                        IsBAndSubBDifferent = bPropertyInfo.Name != prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo.Name, // TODO
+                        //SubBPropertyInfo = prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo,
+                        //IsAndSubBDifferent = bPropertyInfo.Name != prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo.Name, // TODO
                     },
                     SubMetaMap = prevSubMap.MetaMap.Value
                 }),
