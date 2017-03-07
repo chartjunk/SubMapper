@@ -50,6 +50,8 @@ namespace SubMapper
     public partial class BaseMapping<TA, TB>
     {
         protected List<SubMap> _subMaps { get; set; } = new List<SubMap>();
+        protected PropertyInfo _iPropertyInfo;
+        protected PropertyInfo _jPropertyInfo;
 
         protected static SubMap GetAToBIToJFrom(SubMap subMap)
         {

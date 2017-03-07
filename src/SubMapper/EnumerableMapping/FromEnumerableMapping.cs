@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SubMapper.EnumerableMapping
 {
@@ -19,6 +20,12 @@ namespace SubMapper.EnumerableMapping
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, IEnumerable<TSubAItem>>> getSubAExpr,
             Expression<Func<TB, TSubB>> getSubBExpr)
-            => _subMaps.Select(s => MapFromEnumerableVia(s, getSubAExpr, getSubBExpr)).ToList();
+        {
+            // i is always enum
+            // j is always the other one
+            _iPropertyInfo = getSubAExpr.GetPropertyInfo();
+            _jPropertyInfo = getSubBExpr.GetPropertyInfo();
+            return _subMaps.Select(MapFromEnumerableVia<TA, TB>).ToList();
+        }
     }
 }

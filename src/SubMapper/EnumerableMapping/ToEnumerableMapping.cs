@@ -19,6 +19,12 @@ namespace SubMapper.EnumerableMapping
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, TSubA>> getSubAExpr,
             Expression<Func<TB, IEnumerable<TSubBItem>>> getSubBEnumExpr)
-            => _subMaps.Select(SubMap.Reverse).Select(s => MapFromEnumerableVia(s, getSubBEnumExpr, getSubAExpr)).Select(SubMap.Reverse).ToList();
+        {
+            // i is always enum
+            // j is always the other one
+            _iPropertyInfo = getSubBEnumExpr.GetPropertyInfo();
+            _jPropertyInfo = getSubAExpr.GetPropertyInfo();
+            return _subMaps.Select(SubMap.Reverse).Select(MapFromEnumerableVia<TB, TA>).Select(SubMap.Reverse).ToList();
+        }
     }
 }

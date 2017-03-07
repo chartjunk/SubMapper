@@ -6,7 +6,7 @@ namespace SubMapper
 {
     public static partial class Utils
     {
-        private static PropertyInfo GetPropertyInfo<TI, TValue>(
+        public static PropertyInfo GetPropertyInfo<TI, TValue>(
             this Expression<Func<TI, TValue>> getIExpr)
         {
             var memberExpression = getIExpr.Body as MemberExpression;

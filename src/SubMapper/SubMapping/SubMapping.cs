@@ -18,14 +18,16 @@ namespace SubMapper.SubMapping
 
         public List<SubMap> GetSubMapsWithAddedPath(
             Expression<Func<TA, TSubA>> getSubAExpr,
-            Expression<Func<TB, TSubB>> getSubBExpr) 
-            =>  _subMaps.Select(s => MapVia(s, getSubAExpr, getSubBExpr)).ToList();
+            Expression<Func<TB, TSubB>> getSubBExpr)
+        {
+            _iPropertyInfo = getSubAExpr.GetPropertyInfo();
+            _jPropertyInfo = getSubBExpr.GetPropertyInfo();
+            return _subMaps.Select(MapVia<TA, TB>).ToList();
+        }
 
-        private static void GetXSetY(object nx, object ny, 
-            PropertyInfo xPropertyInfo, 
-            PropertyInfo yPropertyInfo, 
-            PropertyInfo prevXPropertyInfo, 
-            PropertyInfo prevYPropertyInfo,
+        private void GetXSetY(object nx, object ny,
+            PropertyInfo xPropertyInfo,
+            PropertyInfo yPropertyInfo,
             Action<object, object> doPrevSubMapping,
             Func<object> GetNewY)
         {
@@ -38,7 +40,6 @@ namespace SubMapper.SubMapping
             else
                 x = nx;
 
-
             var y = yPropertyInfo != null ? yPropertyInfo.GetValue(ny) : ny; // may be k => k
             if (y == null)
             {
@@ -46,52 +47,31 @@ namespace SubMapper.SubMapping
                 yPropertyInfo.SetValue(ny, y);
             }
 
-            if (doPrevSubMapping == null)
-            {
-                x = prevXPropertyInfo.GetValue(x);
-                prevYPropertyInfo.SetValue(y, x);
-            }
-            else
-                doPrevSubMapping(x, y);
-
+            doPrevSubMapping(x, y);
         }
 
-        protected static SubMap MapVia<TNonA, TNonB>(
-            SubMap prevSubMap,
-            Expression<Func<TNonA, TSubA>> getSubAExpr,
-            Expression<Func<TNonB, TSubB>> getSubBExpr)
+        protected SubMap MapVia<TNonA, TNonB>(SubMap prevSubMap)
         {
-            var aInfo = getSubAExpr.GetMapPropertyInfo();
-            var bInfo = getSubBExpr.GetMapPropertyInfo();
-
-            //TODO: refactor this kludge
-            var aPropertyInfo = aInfo.PropertyInfo;
-            if (aInfo.Setter == null)
-                aPropertyInfo = prevSubMap.IPropertyInfo;
-            var bPropertyInfo = bInfo.PropertyInfo;
-            if (bInfo.Setter == null)
-                bPropertyInfo = prevSubMap.JPropertyInfo;
-
             var result = new SubMap
             {
-                GetASetB = (a, b) => GetXSetY(a, b, aInfo.PropertyInfo, bInfo.PropertyInfo, prevSubMap.IPropertyInfo, prevSubMap.JPropertyInfo, prevSubMap.IsBaseSubMap ? null : prevSubMap.GetASetB, () => new TSubB()),
-                GetBSetA = (b, a) => GetXSetY(b, a, bInfo.PropertyInfo, aInfo.PropertyInfo, prevSubMap.JPropertyInfo, prevSubMap.IPropertyInfo, prevSubMap.IsBaseSubMap ? null : prevSubMap.GetBSetA, () => new TSubA()),
+                GetASetB = (a, b) => GetXSetY(a, b, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB, () => new TSubB()),
+                GetBSetA = (b, a) => GetXSetY(b, a, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA, () => new TSubA()),
 
-                APropertyInfo = aPropertyInfo,
-                BPropertyInfo = bPropertyInfo,
+                APropertyInfo = _iPropertyInfo ?? prevSubMap.IPropertyInfo,
+                BPropertyInfo = _jPropertyInfo ?? prevSubMap.JPropertyInfo,
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
                     MetadataType = typeof(SubMappingMetadata),
                     Metadata = new SubMappingMetadata
                     {
-                        APropertyInfo = aPropertyInfo,
-                        //SubAPropertyInfo = prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo,
-                        //IsAAndSubADifferent = aPropertyInfo.Name != prevSubMap.HalfSubMapPair.AHalfSubMap.PropertyInfo.Name, // TODO
+                        APropertyInfo = _iPropertyInfo,
+                        SubAPropertyInfo = prevSubMap.APropertyInfo,
+                        IsAAndSubADifferent = _iPropertyInfo != null,
 
-                        BPropertyInfo = bPropertyInfo,
-                        //SubBPropertyInfo = prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo,
-                        //IsAndSubBDifferent = bPropertyInfo.Name != prevSubMap.HalfSubMapPair.BHalfSubMap.PropertyInfo.Name, // TODO
+                        BPropertyInfo = _jPropertyInfo,
+                        SubBPropertyInfo = prevSubMap.BPropertyInfo,
+                        IsBAndSubBDifferent = _jPropertyInfo != null
                     },
                     SubMetaMap = prevSubMap.MetaMap.Value
                 }),

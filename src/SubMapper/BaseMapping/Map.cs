@@ -1,50 +1,51 @@
 ﻿using SubMapper.Metadata;
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SubMapper
 {
     public partial class BaseMapping<TA, TB>
     {
-        private static void GetXSetY(object x, object y, Utils.MapPropertyInfo subXInfo, Utils.MapPropertyInfo subYInfo)
+        private static void GetXSetY(object x, object y, PropertyInfo xPropertyInfo, PropertyInfo yPropertyInfo)
         {
             if (x == null)
                 return;
 
-            var xv = subXInfo.Getter(x);
+            var xv = xPropertyInfo.GetValue(x);
 
             if (xv == null)
                 return;
 
-            subYInfo.Setter(y, xv);
+            yPropertyInfo.SetValue(y, xv);
         }
 
         public BaseMapping<TA, TB> Map<TValue>(
             Expression<Func<TA, TValue>> getSubAExpr,
             Expression<Func<TB, TValue>> getSubBExpr)
-        { 
-            var subAInfo = Utils.GetMapPropertyInfo(getSubAExpr);
-            var subBInfo = Utils.GetMapPropertyInfo(getSubBExpr);
+        {
+            var aPropertyInfo = getSubAExpr.GetPropertyInfo();
+            var bPropertyInfo = getSubBExpr.GetPropertyInfo();
 
             var subMap = new SubMap
             {
                 IsBaseSubMap = true,
-                GetASetB = (a, b) => GetXSetY(a, b, subAInfo, subBInfo),
-                GetBSetA = (b, a) => GetXSetY(b, a, subBInfo, subAInfo),
+                GetASetB = (a, b) => GetXSetY(a, b, aPropertyInfo, bPropertyInfo),
+                GetBSetA = (b, a) => GetXSetY(b, a, bPropertyInfo, aPropertyInfo),
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
                     MetadataType = typeof(BaseMapping.BaseMappingMetadata),
                     Metadata = new BaseMapping.BaseMappingMetadata
                     {
-                        APropertyInfo = subAInfo.PropertyInfo,
-                        BPropertyInfo = subBInfo.PropertyInfo
+                        APropertyInfo = aPropertyInfo,
+                        BPropertyInfo = bPropertyInfo
                     },
                     SubMetaMap = null
                 }),
 
-                APropertyInfo = subAInfo.PropertyInfo,
-                BPropertyInfo = subBInfo.PropertyInfo
+                APropertyInfo = aPropertyInfo,
+                BPropertyInfo = bPropertyInfo
             };
 
             _subMaps.Add(subMap);
