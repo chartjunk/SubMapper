@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,9 +27,47 @@ namespace SubMapper.EnumerableMapping
             return this;
         }
 
-        private void GetXSetY(object nx, object ny, )
+        private void GetXSetY<TSubXItem, TSubYItem>(object nXEnum, object nYEnum,
+            PropertyInfo xEnumPropertyInfo,
+            PropertyInfo yEnumPropertyInfo,
+            Action<object, object> doPrevSubMapping)
+            where TSubXItem : new()
+            where TSubYItem : new()
         {
+            if (nXEnum == null)
+                return;
 
+            var xEnum = xEnumPropertyInfo.GetValue(nXEnum);
+            if (xEnum == null)
+                return;
+
+            var xEnumTyped = (IEnumerable<TSubXItem>)xEnum;
+            if (!xEnumTyped.Any())
+                return;
+
+            var yEnum = yEnumPropertyInfo.GetValue(nYEnum);
+            List<TSubYItem> yEnumTyped;
+            if (yEnum == null)
+            {
+                yEnumTyped = xEnumTyped.Select(x => new TSubYItem()).ToList();
+                yEnumPropertyInfo.SetValue(nYEnum, yEnumTyped);
+            }
+            else
+                yEnumTyped = ((IEnumerable<TSubYItem>)yEnum).ToList();
+
+            var isAnyWasMapped = false;
+            yEnumTyped
+                .Select((y, i) => new { y, i })
+                .ToList()
+                .ForEach(y =>
+                {
+                    var x = xEnumTyped.ElementAt(y.i);
+                    isAnyWasMapped = true;
+                    doPrevSubMapping(x, y.y);
+                });
+
+            if (isAnyWasMapped)
+                yEnumPropertyInfo.SetValue(nYEnum, yEnumTyped);
         }
 
         protected SubMap MapEnumerableVia<TNonA, TNonB>(SubMap prevSubMap)
@@ -38,83 +77,83 @@ namespace SubMapper.EnumerableMapping
                 APropertyInfo = _iPropertyInfo,
                 BPropertyInfo = _jPropertyInfo,
 
-                GetASetB = (a, b) => GetXSetY(a, b, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
-                GetBSetA = (a, b) => GetXSetY(b, a, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
+                GetASetB = (a, b) => GetXSetY<TSubAItem, TSubBItem>(a, b, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
+                GetBSetA = (b, a) => GetXSetY<TSubBItem, TSubAItem>(b, a, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
 
-                HalfSubMapPair = new HalfSubMapPair
-                {
-                    // TODO: change v-argument semantically from "base value" to "source to target passer"
+                //HalfSubMapPair = new HalfSubMapPair
+                //{
+                //    // TODO: change v-argument semantically from "base value" to "source to target passer"
 
-                    AHalfSubMap = new HalfSubMap
-                    {
-                        GetSubFrom = na =>
-                        {
-                            var subAEnum = subAEnumInfo.Getter(na);
-                            return subAEnum;
-                            //if (subAEnum == null) return null;
-                            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
-                            //if (subAItem == null) return null;
+                //    AHalfSubMap = new HalfSubMap
+                //    {
+                //        GetSubFrom = na =>
+                //        {
+                //            var subAEnum = subAEnumInfo.Getter(na);
+                //            return subAEnum;
+                //            //if (subAEnum == null) return null;
+                //            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
+                //            //if (subAItem == null) return null;
 
-                            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
-                        },
-                        SetSubFrom = (na, v) =>
-                        {
-                            if (v == null) return;
-                            var subAEnum = subAEnumInfo.Getter(na);
-                            var subAItem = subAEnum != null ? (object)((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault() : null;
+                //            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
+                //        },
+                //        SetSubFrom = (na, v) =>
+                //        {
+                //            if (v == null) return;
+                //            var subAEnum = subAEnumInfo.Getter(na);
+                //            var subAItem = subAEnum != null ? (object)((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault() : null;
 
-                            if (subAItem == null)
-                            {
-                                subAItem = new TSubAItem();
-                                subAEnum = _getSubAEnumWithAddedSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
-                                subAEnumInfo.Setter(na, subAEnum);
-                            }
+                //            if (subAItem == null)
+                //            {
+                //                subAItem = new TSubAItem();
+                //                subAEnum = _getSubAEnumWithAddedSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
+                //                subAEnumInfo.Setter(na, subAEnum);
+                //            }
 
-                            prevSubMap.HalfSubMapPair.AHalfSubMap.SetSubFrom(subAItem, v);
-                        }
-                    },
-                    BHalfSubMap = new HalfSubMap
-                    {
-                        GetSubFrom = nb =>
-                        {
-                            var subBEnum = subBEnumInfo.Getter(nb);
-                            if (subBEnum == null) return null;
-                            var subBItem = ((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault();
-                            if (subBItem == null) return null;
+                //            prevSubMap.HalfSubMapPair.AHalfSubMap.SetSubFrom(subAItem, v);
+                //        }
+                //    },
+                //    BHalfSubMap = new HalfSubMap
+                //    {
+                //        GetSubFrom = nb =>
+                //        {
+                //            var subBEnum = subBEnumInfo.Getter(nb);
+                //            if (subBEnum == null) return null;
+                //            var subBItem = ((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault();
+                //            if (subBItem == null) return null;
 
-                            return prevSubMap.HalfSubMapPair.BHalfSubMap.GetSubFrom(subBItem);
-                        },
-                        SetSubFrom = (nb, v) =>
-                        {
-                            if (v == null) return;
-                            var subAEnum = ((IEnumerable<TSubAItem>)v);
-                            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
+                //            return prevSubMap.HalfSubMapPair.BHalfSubMap.GetSubFrom(subBItem);
+                //        },
+                //        SetSubFrom = (nb, v) =>
+                //        {
+                //            if (v == null) return;
+                //            var subAEnum = ((IEnumerable<TSubAItem>)v);
+                //            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
 
-                            if (subBEnum == null)
-                                subBEnum = new List<TSubBItem>();
+                //            if (subBEnum == null)
+                //                subBEnum = new List<TSubBItem>();
 
-                            for (int i = 0; i < subAEnum.Count(); ++i)
-                            {
-                                TSubBItem subBItem;
-                                // If equivalent child does not exist, create
-                                if (subBEnum.Count() <= i)
-                                {
-                                    subBItem = new TSubBItem();
-                                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
-                                }
-                                else
-                                    subBItem = subBEnum.ElementAt(i);
+                //            for (int i = 0; i < subAEnum.Count(); ++i)
+                //            {
+                //                TSubBItem subBItem;
+                //                // If equivalent child does not exist, create
+                //                if (subBEnum.Count() <= i)
+                //                {
+                //                    subBItem = new TSubBItem();
+                //                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
+                //                }
+                //                else
+                //                    subBItem = subBEnum.ElementAt(i);
 
-                                // Set value for each child
-                                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
-                                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
-                            }
+                //                // Set value for each child
+                //                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
+                //                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
+                //            }
 
-                            // Connect enumerable to its parent
-                            subBEnumInfo.Setter(nb, subBEnum);
-                        }
-                    }
-                }
+                //            // Connect enumerable to its parent
+                //            subBEnumInfo.Setter(nb, subBEnum);
+                //        }
+                //    }
+                //}
             };
             return result;
         }
