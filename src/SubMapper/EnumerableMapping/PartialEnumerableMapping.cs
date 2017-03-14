@@ -107,7 +107,7 @@ namespace SubMapper.EnumerableMapping
                         SubJPropertyInfo = prevSubMap.JPropertyInfo,
                         IsJAndSubJDifferent = _jPropertyInfo != null,
 
-                        WhereEquals = _whereMatchess.Select(m => new PartialEnumerableMappingWhereEqualsMetadata
+                        WhereEquals = _whereMatchess.Select(m => new WhereEqualsMetadata
                         {
                             PropertyInfo = m.PropertyInfo,
                             EqualValue = m.EqualValue

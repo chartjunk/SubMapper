@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubMapper.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -91,83 +92,36 @@ namespace SubMapper.EnumerableMapping
                 APropertyInfo = _iPropertyInfo,
                 BPropertyInfo = _jPropertyInfo,
 
-                GetASetB = (a, b) => GetXSetY<TSubAItem, TSubBItem>(a, b, _whereAMatchess, _whereBMatchess, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
-                GetBSetA = (b, a) => GetXSetY<TSubBItem, TSubAItem>(b, a, _whereBMatchess, _whereAMatchess, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
+                GetASetB = (a, b) => GetXSetY(a, b, _whereAMatchess, _whereBMatchess, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
+                GetBSetA = (b, a) => GetXSetY(b, a, _whereBMatchess, _whereAMatchess, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
 
-                //HalfSubMapPair = new HalfSubMapPair
-                //{
-                //    // TODO: change v-argument semantically from "base value" to "source to target passer"
+                MetaMap = new Lazy<MetaMap>(() => new MetaMap
+                {
+                    MetadataType = typeof(EnumerablesMappingMetadata),
+                    Metadata = new EnumerablesMappingMetadata
+                    {
+                        
+                        AEnumPropertyInfo = _iPropertyInfo,
+                        SubAEnumPropertyInfo = prevSubMap.IPropertyInfo,
 
-                //    AHalfSubMap = new HalfSubMap
-                //    {
-                //        GetSubFrom = na =>
-                //        {
-                //            var subAEnum = subAEnumInfo.Getter(na);
-                //            return subAEnum;
-                //            //if (subAEnum == null) return null;
-                //            //var subAItem = ((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault();
-                //            //if (subAItem == null) return null;
+                        BEnumPropertyInfo = _jPropertyInfo,
+                        SubBEnumPropertyInfo = prevSubMap.JPropertyInfo,
 
-                //            //return prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAItem);
-                //        },
-                //        SetSubFrom = (na, v) =>
-                //        {
-                //            if (v == null) return;
-                //            var subAEnum = subAEnumInfo.Getter(na);
-                //            var subAItem = subAEnum != null ? (object)((IEnumerable<TSubAItem>)subAEnum).FirstOrDefault() : null;
+                        WhereAEquals = _whereAMatchess.Select(m => new WhereEqualsMetadata
+                        {
+                            PropertyInfo = m.PropertyInfo,
+                            EqualValue = m.EqualValue
+                        }),
 
-                //            if (subAItem == null)
-                //            {
-                //                subAItem = new TSubAItem();
-                //                subAEnum = _getSubAEnumWithAddedSubAItem((TSubAEnum)subAEnum, (TSubAItem)subAItem);
-                //                subAEnumInfo.Setter(na, subAEnum);
-                //            }
+                        WhereBEquals = _whereBMatchess.Select(m => new WhereEqualsMetadata
+                        {
+                            PropertyInfo = m.PropertyInfo,
+                            EqualValue = m.EqualValue
+                        })
+                    },
 
-                //            prevSubMap.HalfSubMapPair.AHalfSubMap.SetSubFrom(subAItem, v);
-                //        }
-                //    },
-                //    BHalfSubMap = new HalfSubMap
-                //    {
-                //        GetSubFrom = nb =>
-                //        {
-                //            var subBEnum = subBEnumInfo.Getter(nb);
-                //            if (subBEnum == null) return null;
-                //            var subBItem = ((IEnumerable<TSubBItem>)subBEnum).FirstOrDefault();
-                //            if (subBItem == null) return null;
-
-                //            return prevSubMap.HalfSubMapPair.BHalfSubMap.GetSubFrom(subBItem);
-                //        },
-                //        SetSubFrom = (nb, v) =>
-                //        {
-                //            if (v == null) return;
-                //            var subAEnum = ((IEnumerable<TSubAItem>)v);
-                //            var subBEnum = ((IEnumerable<TSubBItem>)subBEnumInfo.Getter(nb));
-
-                //            if (subBEnum == null)
-                //                subBEnum = new List<TSubBItem>();
-
-                //            for (int i = 0; i < subAEnum.Count(); ++i)
-                //            {
-                //                TSubBItem subBItem;
-                //                // If equivalent child does not exist, create
-                //                if (subBEnum.Count() <= i)
-                //                {
-                //                    subBItem = new TSubBItem();
-                //                    subBEnum = _getSubBEnumWithAddedSubBItem((TSubBEnum)subBEnum, subBItem);
-                //                }
-                //                else
-                //                    subBItem = subBEnum.ElementAt(i);
-
-                //                // Set value for each child
-                //                var value = prevSubMap.HalfSubMapPair.AHalfSubMap.GetSubFrom(subAEnum.ElementAt(i));
-                //                prevSubMap.HalfSubMapPair.BHalfSubMap.SetSubFrom(subBItem, value);
-                //            }
-
-                //            // Connect enumerable to its parent
-                //            subBEnumInfo.Setter(nb, subBEnum);
-                //        }
-                //    }
-                //}
+                    SubMetaMap = prevSubMap.MetaMap.Value
+                }),
             };
             return result;
         }

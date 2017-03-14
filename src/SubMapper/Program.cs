@@ -79,7 +79,7 @@ namespace SubMapper
 
             mapping.TranslateAToB(testSource, testTarget);
             mapping.TranslateBToA(testSource2, testTarget);
-            //var extract = Metadata.SimpleStringExtraction.ExtractFrom(mapping);
+            var extract = Metadata.SimpleStringExtraction.ExtractFrom(mapping);
 
             Console.WriteLine("==== MAPPING TESTS ====");
             Console.WriteLine($"testTarget.TargetString: {testTarget?.TargetString}");

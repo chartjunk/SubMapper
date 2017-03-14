@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace SubMapper.EnumerableMapping
 {
-    public class PartialEnumerableMappingWhereEqualsMetadata
+    public class WhereEqualsMetadata
     {
         public PropertyInfo PropertyInfo { get; set; }
         public object EqualValue { get; set; }
@@ -19,7 +19,7 @@ namespace SubMapper.EnumerableMapping
         public PropertyInfo SubJPropertyInfo { get; set; }
         public bool IsJAndSubJDifferent { get; set; }
 
-        public IEnumerable<PartialEnumerableMappingWhereEqualsMetadata> WhereEquals { get; set; }
+        public IEnumerable<WhereEqualsMetadata> WhereEquals { get; set; }
 
         public MappingViewType MappingViewType { get; set; }
     }
