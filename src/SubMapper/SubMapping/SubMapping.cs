@@ -40,6 +40,9 @@ namespace SubMapper.SubMapping
             else
                 x = nx;
 
+            if (x == null)
+                return;
+
             var y = yPropertyInfo != null ? yPropertyInfo.GetValue(ny) : ny; // may be k => k
             if (y == null)
             {
