@@ -44,6 +44,15 @@ namespace SubMapper.UnitTest
 
             mapping.TranslateAToB(si, ti);
             mapping.TranslateBToA(si2, ti);
+
+            var siEnum = si.EnumerableList1.First();
+            var tiEnum = ti.EnumerableList1.Single();
+            var si2Enum = si2.EnumerableList1.Single();
+
+            Assert.AreEqual(siEnum.EnumerableString1, tiEnum.EnumerableString1);
+            Assert.AreEqual(si2Enum.EnumerableString1, tiEnum.EnumerableString1);
+            Assert.AreEqual(tiEnum.EnumerableInt1, 999);
+            Assert.AreEqual(si2Enum.EnumerableInt1, 1);
         }
     }
 }
