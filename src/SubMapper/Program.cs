@@ -74,7 +74,7 @@ namespace SubMapper
                 //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt))
 
                 .Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
-                    .Map(a => a.SourceEnumString, b => b.TargetEnumString)
+                    .Where(a => a.SourceEnumInt == 6, b => b.TargetEnumInt == 999)
                     .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));
 
             mapping.TranslateAToB(testSource, testTarget);

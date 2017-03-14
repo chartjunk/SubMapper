@@ -48,6 +48,16 @@ namespace SubMapper.Metadata
                                 currentBString += "." + m.JPropertyInfo.Name;
                         }
                     }
+                    else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.EnumerablesMappingMetadata)))
+                    {
+                        var m = ((EnumerableMapping.EnumerablesMappingMetadata)currentMap.Metadata);
+                        var whereAEquals = string.Join(" AND ", m.WhereAEquals.Select(i => i.PropertyInfo.Name + "=" + Convert.ToString(i.EqualValue) ?? ""));
+                        var whereBEquals = string.Join(" AND ", m.WhereBEquals.Select(i => i.PropertyInfo.Name + "=" + Convert.ToString(i.EqualValue) ?? ""));
+                        currentAString += "." + m.AEnumPropertyInfo.Name + $"[{whereAEquals}]";
+                        currentBString += "." + m.BEnumPropertyInfo.Name + $"[{whereBEquals}]";
+                    }
+                    else
+                        throw new NotImplementedException(currentMap.MetadataType.ToString());
 
                     currentMap = currentMap.SubMetaMap;
                 }

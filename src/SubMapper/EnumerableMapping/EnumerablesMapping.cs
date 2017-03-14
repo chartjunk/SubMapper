@@ -100,7 +100,6 @@ namespace SubMapper.EnumerableMapping
                     MetadataType = typeof(EnumerablesMappingMetadata),
                     Metadata = new EnumerablesMappingMetadata
                     {
-                        
                         AEnumPropertyInfo = _iPropertyInfo,
                         SubAEnumPropertyInfo = prevSubMap.IPropertyInfo,
 
