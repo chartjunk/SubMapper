@@ -31,11 +31,59 @@ namespace SubMapper.EnumerableMapping
             {
                 PropertyInfo = i.Item1,
                 EqualValue = i.Item2,
-                GetSubIItemsFromSubIEnumWhereMatches = new Func<IEnumerable<TSubIItem>, IEnumerable<TSubIItem>>(subIEnum =>
+                GetSubIItemsFromSubIEnumWhereMatches = subIEnum =>
                     subIEnum != null
                     ? subIEnum.Where(j => i.Item1.GetValue(j).Equals(i.Item2))
-                    : default(IEnumerable<TSubIItem>))
+                    : default(IEnumerable<TSubIItem>)
             }));
+            return this;
+        }
+    }
+
+    public partial class EnumerablesMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem>
+    {
+        private List<WhereMatchesContainer<TSubAItem>> _whereAMatchess = new List<WhereMatchesContainer<TSubAItem>>();
+        private List<WhereMatchesContainer<TSubBItem>> _whereBMatchess = new List<WhereMatchesContainer<TSubBItem>>();
+
+        private class WhereMatchesContainer<TSubXItem>
+            where TSubXItem : new()
+        {
+            public Func<IEnumerable<TSubXItem>, IEnumerable<TSubXItem>> GetSubXItemsFromSubXEnumWhereMatches { get; internal set; }
+            public PropertyInfo PropertyInfo { get; set; }
+            public object EqualValue { get; set; }
+        }
+
+        public EnumerablesMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem> Where(
+            Expression<Func<TSubAItem, bool>> aEqualsExpression,
+            Expression<Func<TSubBItem, bool>> bEqualsExpression)
+        {
+
+            // TODO: refactor
+
+            var aExpressionVisitor = new MapWhereExpressionVisitor();
+            aExpressionVisitor.Visit(aEqualsExpression);
+            aExpressionVisitor.WhereEqualsKeyValues.ForEach(i => _whereAMatchess.Add(new WhereMatchesContainer<TSubAItem>
+            {
+                PropertyInfo = i.Item1,
+                EqualValue = i.Item2,
+                GetSubXItemsFromSubXEnumWhereMatches = subAEnum =>
+                    subAEnum != null
+                    ? subAEnum.Where(j => i.Item1.GetValue(j).Equals(i.Item2))
+                    : default(IEnumerable<TSubAItem>)
+            }));
+
+            var bExpressionVisitor = new MapWhereExpressionVisitor();
+            bExpressionVisitor.Visit(bEqualsExpression);
+            bExpressionVisitor.WhereEqualsKeyValues.ForEach(i => _whereBMatchess.Add(new WhereMatchesContainer<TSubBItem>
+            {
+                PropertyInfo = i.Item1,
+                EqualValue = i.Item2,
+                GetSubXItemsFromSubXEnumWhereMatches = subBEnum =>
+                    subBEnum != null
+                    ? subBEnum.Where(j => i.Item1.GetValue(j).Equals(i.Item2))
+                    : default(IEnumerable<TSubBItem>)
+            }));
+
             return this;
         }
     }

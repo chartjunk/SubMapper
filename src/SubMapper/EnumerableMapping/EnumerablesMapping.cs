@@ -27,7 +27,10 @@ namespace SubMapper.EnumerableMapping
             return this;
         }
 
-        private void GetXSetY<TSubXItem, TSubYItem>(object nXEnum, object nYEnum,
+        private void GetXSetY<TSubXItem, TSubYItem>(
+            object nXEnum, object nYEnum,
+            IEnumerable<WhereMatchesContainer<TSubXItem>> whereXMatchess,
+            IEnumerable<WhereMatchesContainer<TSubYItem>> whereYMatchess,
             PropertyInfo xEnumPropertyInfo,
             PropertyInfo yEnumPropertyInfo,
             Action<object, object> doPrevSubMapping)
@@ -41,15 +44,26 @@ namespace SubMapper.EnumerableMapping
             if (xEnum == null)
                 return;
 
-            var xEnumTyped = (IEnumerable<TSubXItem>)xEnum;
+            var xEnumTyped = (IEnumerable<TSubXItem>)xEnum;            
             if (!xEnumTyped.Any())
                 return;
+
+            if (whereXMatchess.Any())
+                xEnumTyped = whereXMatchess
+                    .Select(w => w.GetSubXItemsFromSubXEnumWhereMatches)
+                    .Aggregate((g1, g2) => e => g1(g2(e)))(xEnumTyped);            
 
             var yEnum = yEnumPropertyInfo.GetValue(nYEnum);
             List<TSubYItem> yEnumTyped;
             if (yEnum == null)
             {
-                yEnumTyped = xEnumTyped.Select(x => new TSubYItem()).ToList();
+                yEnumTyped = xEnumTyped.Select(x =>
+                {
+                    var y = new TSubYItem();
+                    whereYMatchess.ToList()
+                        .ForEach(w => w.PropertyInfo.SetValue(y, w.EqualValue));
+                    return y;
+                }).ToList();
                 yEnumPropertyInfo.SetValue(nYEnum, yEnumTyped);
             }
             else
@@ -77,8 +91,8 @@ namespace SubMapper.EnumerableMapping
                 APropertyInfo = _iPropertyInfo,
                 BPropertyInfo = _jPropertyInfo,
 
-                GetASetB = (a, b) => GetXSetY<TSubAItem, TSubBItem>(a, b, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
-                GetBSetA = (b, a) => GetXSetY<TSubBItem, TSubAItem>(b, a, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
+                GetASetB = (a, b) => GetXSetY<TSubAItem, TSubBItem>(a, b, _whereAMatchess, _whereBMatchess, _iPropertyInfo, _jPropertyInfo, prevSubMap.GetASetB),
+                GetBSetA = (b, a) => GetXSetY<TSubBItem, TSubAItem>(b, a, _whereBMatchess, _whereAMatchess, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
 
                 //HalfSubMapPair = new HalfSubMapPair
                 //{
