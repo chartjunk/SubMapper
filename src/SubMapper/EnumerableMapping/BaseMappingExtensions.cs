@@ -47,12 +47,14 @@ namespace SubMapper
             where TSubAItem : new()
             where TSubBItem : new()
         {
-            var enumerablesMapping = new EnumerablesMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>();
+            Action finishMappingAction = null;
+            var enumerablesMapping = new EnumerablesMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>(out finishMappingAction);
             var innerBaseMapping = getInnerBaseMapping(enumerablesMapping);
             var fullSubMaps = enumerablesMapping.GetSubMapsWithAddedPath(getSubAEnumExpr, getSubBEnumExpr);
 
             // Finalize EnumerablesMapping After the final inner Map
-            fullSubMaps.Last().FinishMap = enumerablesMapping.FinishMapping;
+            fullSubMaps.Last().FinishMap = finishMappingAction;
+
             source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
         }

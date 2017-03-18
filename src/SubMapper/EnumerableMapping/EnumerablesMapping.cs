@@ -21,6 +21,11 @@ namespace SubMapper.EnumerableMapping
         private Func<TSubAEnum, TSubAItem, TSubAEnum> _getSubAEnumWithAddedSubAItem;
         private Func<TSubBEnum, TSubBItem, TSubBEnum> _getSubBEnumWithAddedSubBItem;
 
+        public EnumerablesMapping(out Action finishMappingAction)
+        {
+            finishMappingAction = FinishMapping;
+        }
+
         public EnumerablesMapping<TA, TB, TSubAEnum, TSubBEnum, TSubAItem, TSubBItem> UsingAdder(
             Func<TSubAEnum, TSubAItem, TSubAEnum> getAEnumWithAddedAItem,
             Func<TSubBEnum, TSubBItem, TSubBEnum> getBEnumWithAddedBItem)
@@ -30,7 +35,7 @@ namespace SubMapper.EnumerableMapping
             return this;
         }
 
-        public void FinishMapping()
+        private void FinishMapping()
         {
             _isAnyMapsYetMapped = false;
             _yEnumTypedToXEnumTypedIndexing = null;
