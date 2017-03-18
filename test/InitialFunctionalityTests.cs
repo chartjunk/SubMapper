@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System;
-using System.Collections.Generic;
+using SubMapper.EnumerableMapping.Adders;
 
 namespace SubMapper.UnitTest
 {
@@ -101,8 +101,8 @@ namespace SubMapper.UnitTest
                         (c, t) => (c ?? new TargetType.TargetEnumerableType[] { }).Concat(new[] { t }))
                     .Map(s => s.EnumerableInt1, t => t.EnumerableInt1)
                     .Map(s => s.EnumerableString1, t => t.EnumerableString1)
-                    .Sub(s => s.EnumerableSub1, t => t.EnumerableSub1, subMapping => subMapping
-                        .Map(s => s.EnumerableSubString1, t => t.EnumerableSubString1)));
+                        .Sub(s => s.EnumerableSub1, t => t.EnumerableSub1, subMapping => subMapping
+                            .Map(s => s.EnumerableSubString1, t => t.EnumerableSubString1)));
 
             var si = SourceType.GetTestInstance();
             var ti = new TargetType();
@@ -137,6 +137,31 @@ namespace SubMapper.UnitTest
                 Tuple.Create(si2Second, tiSecond)
             })
                 assertEnumerablesEqual(p.Item1, p.Item2);
+        }
+
+        [TestMethod]
+        public void MapSameEnumerableWithMultipleWheres()
+        {
+            var mapping = Mapping.FromTo<SourceType, TargetType>()
+                .Enums(s => s.Enumerable2, t => t.Enumerable1, eM => eM
+                    .UsingArrayConcatAdder()
+                    .Where(s => s.EnumerableString1 == "A", t => t.EnumerableString1 == "A")
+                    .Map(s => s.EnumerableInt1, t => t.EnumerableInt1))
+                .Enums(s => s.Enumerable2, t => t.Enumerable1, eM => eM
+                    .UsingArrayConcatAdder()
+                    .Where(s => s.EnumerableString1 == "B", t => t.EnumerableString1 == "B")
+                    .Map(s => s.EnumerableInt2, t => t.EnumerableInt1));
+
+            var si = SourceType.GetTestInstance();
+            var ti = new TargetType();
+            var si2 = new SourceType();
+
+            mapping.TranslateAToB(si, ti);
+            mapping.TranslateBToA(si2, ti);
+
+            var sourceAbElements = si.Enumerable2.Where(i => new[] { "A", "B" }.Contains(i.EnumerableString1)).ToList();
+            Assert.AreEqual(ti.Enumerable1.Count(), sourceAbElements.Count);
+            Assert.AreEqual(si2.Enumerable2.Count(), sourceAbElements.Count);
         }
 
         [TestMethod]

@@ -16,6 +16,8 @@ namespace SubMapper.EnumerableMapping
         where TSubAItem : new()
         where TSubBItem : new()
     {
+        private bool _isAnyMapsYetMapped = false;
+        private Dictionary<int, int> _yEnumTypedToXEnumTypedIndexing;
         private Func<TSubAEnum, TSubAItem, TSubAEnum> _getSubAEnumWithAddedSubAItem;
         private Func<TSubBEnum, TSubBItem, TSubBEnum> _getSubBEnumWithAddedSubBItem;
 
@@ -26,6 +28,12 @@ namespace SubMapper.EnumerableMapping
             _getSubAEnumWithAddedSubAItem = getAEnumWithAddedAItem;
             _getSubBEnumWithAddedSubBItem = getBEnumWithAddedBItem;
             return this;
+        }
+
+        public void FinishMapping()
+        {
+            _isAnyMapsYetMapped = false;
+            _yEnumTypedToXEnumTypedIndexing = null;
         }
 
         private void GetXSetY<TSubXItem, TSubYItem>(
@@ -55,28 +63,47 @@ namespace SubMapper.EnumerableMapping
                     .Aggregate((g1, g2) => e => g1(g2(e)))(xEnumTyped);            
 
             var yEnum = yEnumPropertyInfo.GetValue(nYEnum);
-            List<TSubYItem> yEnumTyped;
-            if (yEnum == null)
+            List<TSubYItem> yEnumTyped = null;
+
+            yEnumTyped = yEnum != null
+                ? ((IEnumerable<TSubYItem>)yEnum).ToList()
+                : new List<TSubYItem>();
+
+            if (!_isAnyMapsYetMapped)
             {
-                yEnumTyped = xEnumTyped.Select(x =>
+                _isAnyMapsYetMapped = true;
+
+                _yEnumTypedToXEnumTypedIndexing = xEnumTyped
+                    .Select((x, i) => new { xIx = i, yIx = i + yEnumTyped.Count })
+                    .ToDictionary(i => i.yIx, i => i.xIx);
+                yEnumTyped = yEnumTyped.Concat(xEnumTyped.Select(x =>
                 {
                     var y = new TSubYItem();
                     whereYMatchess.ToList()
                         .ForEach(w => w.PropertyInfo.SetValue(y, w.EqualValue));
                     return y;
-                }).ToList();
+                }).ToList()).ToList();
                 yEnumPropertyInfo.SetValue(nYEnum, yEnumTyped);
             }
-            else
-                yEnumTyped = ((IEnumerable<TSubYItem>)yEnum).ToList();
 
             var isAnyWasMapped = false;
             yEnumTyped
-                .Select((y, i) => new { y, i })
+                .Select((y, ix) => new
+                {
+                    y,
+                    xIx = new Func<int?>(() =>
+                    {
+                        int value;
+                        if (_yEnumTypedToXEnumTypedIndexing.TryGetValue(ix, out value))
+                            return (int?)value;
+                        return null;
+                    })()
+                })
+                .Where(i => i.xIx != null)
                 .ToList()
                 .ForEach(y =>
                 {
-                    var x = xEnumTyped.ElementAt(y.i);
+                    var x = xEnumTyped.ElementAt(y.xIx.Value);
                     isAnyWasMapped = true;
                     doPrevSubMapping(x, y.y);
                 });

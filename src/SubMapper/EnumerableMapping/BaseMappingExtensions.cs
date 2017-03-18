@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using SubMapper.EnumerableMapping;
+using System.Linq;
 
 namespace SubMapper
 {
@@ -49,6 +50,9 @@ namespace SubMapper
             var enumerablesMapping = new EnumerablesMapping<TA, TB, IEnumerable<TSubAItem>, IEnumerable<TSubBItem>, TSubAItem, TSubBItem>();
             var innerBaseMapping = getInnerBaseMapping(enumerablesMapping);
             var fullSubMaps = enumerablesMapping.GetSubMapsWithAddedPath(getSubAEnumExpr, getSubBEnumExpr);
+
+            // Finalize EnumerablesMapping After the final inner Map
+            fullSubMaps.Last().FinishMap = enumerablesMapping.FinishMapping;
             source.Extensibility.SubMaps.AddRange(fullSubMaps);
             return source;
         }

@@ -11,6 +11,6 @@ namespace SubMapper
         public BaseMapping()
         {
             Extensibility = new ExtensibilityContainer(this);
-        }
+        }        
     }
 }

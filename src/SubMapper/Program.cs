@@ -69,10 +69,6 @@ namespace SubMapper
                     .First(b => b.NutrientKey == "JJ")
                     .Map(a => a.SourceInt, b => b.NutrientAmount))
 
-                //.Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
-                //    .First(a => a.SourceEnumString == "a", b => b.TargetEnumString == "b")
-                //    .Map(a => a.SourceEnumInt, b => b.TargetEnumInt))
-
                 .Enums(a => a.SourceEnum, b => b.TargetEnum, eM => eM.UsingArrayConcatAdder()
                     .Where(a => a.SourceEnumInt == 6, b => b.TargetEnumInt == 999)
                     .Map(a => a.SourceEnumInt, b => b.TargetEnumInt));

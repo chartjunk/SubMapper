@@ -32,6 +32,8 @@ namespace SubMapper
                 GetASetB(i, j);
             else
                 GetBSetA(i, j);
+
+            FinishMap?.Invoke();
         };
 
         public MappingViewType MappingViewType { get; set; }
@@ -45,6 +47,8 @@ namespace SubMapper
             else subMap.MappingViewType = MappingViewType.IisAandJisB;
             return subMap;
         }
+
+        public Action FinishMap { get; set; }
     }
 
     public partial class BaseMapping<TA, TB>

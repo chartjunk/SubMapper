@@ -26,6 +26,7 @@ namespace SubMapper.UnitTest
 
             public string EnumerableString1 { get; set; }
             public int EnumerableInt1 { get; set; }
+            public int EnumerableInt2 { get; set; }
             public SourceEnumerableSubType EnumerableSub1 { get; set; }
         }
 
@@ -35,6 +36,7 @@ namespace SubMapper.UnitTest
         public SourceSubType Sub1 { get; set; }
 
         public IEnumerable<SourceEnumerableType> Enumerable1 { get; set; }
+        public IEnumerable<SourceEnumerableType> Enumerable2 { get; set; }
         public List<SourceEnumerableType> EnumerableList1 { get; set; }
         public SourceEnumerableType[] EnumerableArray1 { get; set; }
 
@@ -56,7 +58,7 @@ namespace SubMapper.UnitTest
                 }
             };
 
-            var sourceEnumerable = new[]
+            var sourceEnumerable1 = new[]
             {
                 new SourceEnumerableType
                 {
@@ -75,6 +77,34 @@ namespace SubMapper.UnitTest
                 }
             };
 
+            var sourceEnumerable2 = new[]
+            {
+                new SourceEnumerableType
+                {
+                    EnumerableString1 = "A",
+                    EnumerableInt1 = 111,
+                    EnumerableInt2 = 222,
+                },
+                new SourceEnumerableType
+                {
+                    EnumerableString1 = "A",
+                    EnumerableInt1 = 333,
+                    EnumerableInt2 = 444,
+                },
+                new SourceEnumerableType
+                {
+                    EnumerableString1 = "B",
+                    EnumerableInt1 = 555,
+                    EnumerableInt2 = 666,
+                },
+                new SourceEnumerableType
+                {
+                    EnumerableString1 = "C",
+                    EnumerableInt1 = 777,
+                    EnumerableInt2 = 888,
+                }
+            };
+
             var result = new SourceType
             {
                 DateTime1 = DateTime.MinValue,
@@ -82,9 +112,10 @@ namespace SubMapper.UnitTest
                 Int1 = 1,
 
                 Sub1 = sourceSub,
-                Enumerable1 = sourceEnumerable,
-                EnumerableArray1 = sourceEnumerable,
-                EnumerableList1 = sourceEnumerable.ToList()
+                Enumerable1 = sourceEnumerable1,
+                Enumerable2 = sourceEnumerable2,
+                EnumerableArray1 = sourceEnumerable1,
+                EnumerableList1 = sourceEnumerable1.ToList()
             };
 
             return result;
