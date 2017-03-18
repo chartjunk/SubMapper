@@ -159,9 +159,17 @@ namespace SubMapper.UnitTest
             mapping.TranslateAToB(si, ti);
             mapping.TranslateBToA(si2, ti);
 
-            var sourceAbElements = si.Enumerable2.Where(i => new[] { "A", "B" }.Contains(i.EnumerableString1)).ToList();
-            Assert.AreEqual(ti.Enumerable1.Count(), sourceAbElements.Count);
-            Assert.AreEqual(si2.Enumerable2.Count(), sourceAbElements.Count);
+            var siA = si.Enumerable2.Where(i => i.EnumerableString1 == "A").Select(i => i.EnumerableInt1).OrderBy(i => i).ToArray();
+            var tiA = ti.Enumerable1.Where(i => i.EnumerableString1 == "A").Select(i => i.EnumerableInt1).OrderBy(i => i).ToArray();
+            var siB = si.Enumerable2.Where(i => i.EnumerableString1 == "B").Select(i => i.EnumerableInt2).OrderBy(i => i).ToArray();
+            var tiB = ti.Enumerable1.Where(i => i.EnumerableString1 == "B").Select(i => i.EnumerableInt1).OrderBy(i => i).ToArray();
+            var si2A = si2.Enumerable2.Where(i => i.EnumerableString1 == "A").Select(i => i.EnumerableInt1).OrderBy(i => i).ToArray();
+            var si2B = si2.Enumerable2.Where(i => i.EnumerableString1 == "B").Select(i => i.EnumerableInt2).OrderBy(i => i).ToArray();
+
+            CollectionAssert.AreEqual(siA, tiA);
+            CollectionAssert.AreEqual(siB, tiB);
+            CollectionAssert.AreEqual(si2A, tiA);
+            CollectionAssert.AreEqual(si2B, tiB);
         }
 
         [TestMethod]
