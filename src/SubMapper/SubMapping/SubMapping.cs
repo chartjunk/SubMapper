@@ -64,8 +64,7 @@ namespace SubMapper.SubMapping
                 BPropertyInfo = _jPropertyInfo ?? prevSubMap.JPropertyInfo,
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
-                {
-                    MetadataType = typeof(SubMappingMetadata),
+                {                     
                     Metadata = new SubMappingMetadata
                     {
                         APropertyInfo = _iPropertyInfo,

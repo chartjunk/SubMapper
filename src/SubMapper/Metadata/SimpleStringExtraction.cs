@@ -19,19 +19,19 @@ namespace SubMapper.Metadata
 
                 while (currentMap != null)
                 {
-                    if (currentMap.MetadataType.Equals(typeof(BaseMapping.BaseMappingMetadata)))
+                    if (currentMap.Metadata is BaseMapping.BaseMappingMetadata)
                     {
                         var m = ((BaseMapping.BaseMappingMetadata)currentMap.Metadata);
                         currentAString += "." + m.APropertyInfo.Name;
                         currentBString += "." + m.BPropertyInfo.Name;
                     }
-                    else if (currentMap.MetadataType.Equals(typeof(SubMapping.SubMappingMetadata)))
+                    else if (currentMap.Metadata is SubMapping.SubMappingMetadata)
                     {
                         var m = ((SubMapping.SubMappingMetadata)currentMap.Metadata);
                         if (m.IsAAndSubADifferent) currentAString += "." + m.APropertyInfo.Name;
                         if (m.IsBAndSubBDifferent) currentBString += "." + m.BPropertyInfo.Name;
                     }
-                    else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.PartialEnumerableMappingMetadata)))
+                    else if (currentMap.Metadata is EnumerableMapping.PartialEnumerableMappingMetadata)
                     {
                         var m = ((EnumerableMapping.PartialEnumerableMappingMetadata)currentMap.Metadata);
                         var whereEquals = string.Join(" AND ", m.WhereEquals.Select(i => i.PropertyInfo.Name + "=" + Convert.ToString(i.EqualValue) ?? ""));
@@ -48,7 +48,7 @@ namespace SubMapper.Metadata
                                 currentBString += "." + m.JPropertyInfo.Name;
                         }
                     }
-                    else if (currentMap.MetadataType.Equals(typeof(EnumerableMapping.EnumerablesMappingMetadata)))
+                    else if (currentMap.Metadata is EnumerableMapping.EnumerablesMappingMetadata)
                     {
                         var m = ((EnumerableMapping.EnumerablesMappingMetadata)currentMap.Metadata);
                         var whereAEquals = string.Join(" AND ", m.WhereAEquals.Select(i => i.PropertyInfo.Name + "=" + Convert.ToString(i.EqualValue) ?? ""));
@@ -57,7 +57,7 @@ namespace SubMapper.Metadata
                         currentBString += "." + m.BEnumPropertyInfo.Name + $"[{whereBEquals}]";
                     }
                     else
-                        throw new NotImplementedException(currentMap.MetadataType.ToString());
+                        throw new NotImplementedException(currentMap.Metadata.GetType().FullName);
 
                     currentMap = currentMap.SubMetaMap;
                 }

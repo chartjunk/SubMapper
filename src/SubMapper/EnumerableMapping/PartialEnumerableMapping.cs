@@ -97,7 +97,6 @@ namespace SubMapper.EnumerableMapping
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
-                    MetadataType = typeof(PartialEnumerableMappingMetadata),
                     Metadata = new PartialEnumerableMappingMetadata
                     {
                         IEnumPropertyInfo = _iPropertyInfo,

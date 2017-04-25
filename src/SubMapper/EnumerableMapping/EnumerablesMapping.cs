@@ -130,8 +130,7 @@ namespace SubMapper.EnumerableMapping
                 GetBSetA = (b, a) => GetXSetY(b, a, _whereBMatchess, _whereAMatchess, _jPropertyInfo, _iPropertyInfo, prevSubMap.GetBSetA),
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
-                {
-                    MetadataType = typeof(EnumerablesMappingMetadata),
+                {                     
                     Metadata = new EnumerablesMappingMetadata
                     {
                         AEnumPropertyInfo = _iPropertyInfo,

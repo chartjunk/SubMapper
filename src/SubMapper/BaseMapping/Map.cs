@@ -34,7 +34,6 @@ namespace SubMapper
 
                 MetaMap = new Lazy<MetaMap>(() => new MetaMap
                 {
-                    MetadataType = typeof(BaseMapping.BaseMappingMetadata),
                     Metadata = new BaseMapping.BaseMappingMetadata
                     {
                         APropertyInfo = aPropertyInfo,
