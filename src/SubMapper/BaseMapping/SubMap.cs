@@ -13,6 +13,7 @@ namespace SubMapper
         public Action<object, object> GetBSetA { get; set; }
         public PropertyInfo APropertyInfo { get; set; }
         public PropertyInfo BPropertyInfo { get; set; }
+
         public PropertyInfo IPropertyInfo
         {
             get { return MappingViewType == MappingViewType.IisAandJisB ? APropertyInfo : BPropertyInfo; }
@@ -22,9 +23,7 @@ namespace SubMapper
         {
             get { return MappingViewType == MappingViewType.IisAandJisB ? BPropertyInfo : APropertyInfo; }
             set { if (MappingViewType == MappingViewType.IisAandJisB) BPropertyInfo = value; else APropertyInfo = value; }
-        }
-
-        public bool IsBaseSubMap { get; set; } = false;
+        }        
 
         public Action<object, object> GetISetJ => (i, j) =>
         {
