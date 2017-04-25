@@ -76,6 +76,8 @@ namespace SubMapper.EnumerableMapping
 
             if (!_isAnyMapsYetMapped)
             {
+                // If this is the 
+
                 _isAnyMapsYetMapped = true;
 
                 _yEnumTypedToXEnumTypedIndexing = xEnumTyped

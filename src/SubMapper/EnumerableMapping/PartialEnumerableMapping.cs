@@ -28,7 +28,7 @@ namespace SubMapper.EnumerableMapping
                 return;
 
             var x = _whereMatchess
-                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                    .Select(w => w.GetSubXItemsFromSubXEnumWhereMatches)
                     .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)xEnum)
                     .FirstOrDefault();
             if (x == null)
@@ -60,7 +60,7 @@ namespace SubMapper.EnumerableMapping
             var yEnum = _iPropertyInfo.GetValue(nYEnum);
             var y = yEnum != null
             ? (object)_whereMatchess
-                    .Select(w => w.GetSubIItemsFromSubIEnumWhereMatches)
+                    .Select(w => w.GetSubXItemsFromSubXEnumWhereMatches)
                     .Aggregate((g1, g2) => e => g1(g2(e)))((TSubIEnum)yEnum)
                     .FirstOrDefault()
             : null;
